@@ -3,21 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@reach/combobox": "^0.16.5",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
+    "ol": "^6.12.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
     "react-pro-sidebar": "^0.7.1",
-    "react-scripts": "5.0.0",
-    "web-vitals": "^2.1.4"
+    "react-scripts": "^5.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html --dist-dir docs"
   },
   "eslintConfig": {
     "extends": [
@@ -36,5 +35,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.3.0",
+    "parcel": "^2.3.0",
+    "process": "^0.11.10"
   }
 }

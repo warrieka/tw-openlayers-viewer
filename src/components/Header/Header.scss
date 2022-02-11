@@ -1,12 +1,13 @@
-  #header {
-    position: absolute;
-    width: 220px;
-  }
-  #header .pro-sidebar {
+@import '~react-pro-sidebar/dist/scss/styles.scss';
+
+#header {
+  position: absolute;
+  width: 220px;
+
+  .pro-sidebar {
     height: 100vh;
   }
-  #header .closemenu {
-    color: #000;
+  .closemenu {
     position: absolute;
     right: 0;
     z-index: 9999;
@@ -17,11 +18,13 @@
     top: 55px;
     cursor: pointer;
   }
-  #header .pro-sidebar {
+  .pro-sidebar {
     width: 100%;
     min-width: 100%;
   }
-  #header .pro-sidebar.collapsed {
+  .pro-sidebar.collapsed {
     width: 80px;
     min-width: 80px;
   }
+}
+
