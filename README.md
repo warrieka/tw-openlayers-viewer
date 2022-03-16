@@ -36,8 +36,12 @@ To start the devellopement server:
 npm run start
 ```
 
-To make a production build: 
+To make a production build and deploy: 
+
+The deploy to github you need to be a collaborator on this project. 
 
 ```
 npm run build
+git commit --all -m "some commit message"
+git push 
 ```
