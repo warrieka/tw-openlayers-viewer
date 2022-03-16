@@ -1,12 +1,10 @@
 import './App.css';
-import Header from './components/Header/Header';
 import Map from './components/Map/Map'
 
 function App() {
   return (
-    <div className="App">
-	  <Header />
-    <Map/>
+    <div style={{width:"100vw", height:"100vh"}} className="App">
+      <Map />
     </div>
 
   );

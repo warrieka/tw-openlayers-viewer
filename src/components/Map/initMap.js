@@ -2,23 +2,27 @@ import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import View from 'ol/View';
 import {ngi} from './baseLayers';
+import {ScaleLine} from 'ol/control';
 
+//initial background
 const background = new TileLayer({
     source: ngi
   });
 
-const initMap = () => {
-    const map = new Map({
-        layers: [background],
-        target: 'map',
-    
-        view: new View({
-        center: [485794, 6655284],
-        zoom: 10,
-        }),
+//initial View 
+const viewer = new View({
+        center: [464468, 6612547],
+        zoom: 9, maxZoom: 21, minZoom: 7,
+        extent: [206631, 6296658, 748135, 6805302]
     });
+
+const initMap = () => {
+    window.map = new Map({
+        layers: [background],
+        view: viewer
+    });
+    map.addControl(new ScaleLine());
     return map;
 }
 
-export {initMap, background};
-export default initMap;
+export {initMap, background, viewer};

@@ -1,7 +1,7 @@
 # Trage wegen in Kaart
 
 ## Goal
-
+Create reusable openlayers mapping application for use by Tragen Wegen VZW. 
 
 ## Dependenies
 	
@@ -16,6 +16,9 @@ We use the following pakages:
 
 They are declared in the `package.json` and can be installed wit npm. 
 
+For the location search we will the geopunt location service from the Flemish goverment 
+
+<https://loc.geopunt.be/>
 
 ## Installation
 

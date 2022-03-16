@@ -5,20 +5,3 @@
 .App-link {
   color: #61dafb;
 }
-
-.Fixedheader {
-  position: fixed;
-  font-size: calc(10px + 2vmin);
-  min-height: 100vh;
-  top: 5px;
-  left: 50%;
-  transform: translate(-50%, 0);
-  color: #958dd8;
-  text-shadow: 0 0 3px white;
-  z-index: 999;
-  user-select: none;
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  -o-user-select: none;
-}

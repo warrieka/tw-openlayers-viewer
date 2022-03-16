@@ -1,21 +1,34 @@
 import React, { Component  } from "react";
 import {initMap} from './initMap';
+import Legend from '../Legend/Legend';
+import { Layout } from 'antd';
+const { Content } = Layout;
+//css
 import 'ol/ol.css'; 
-import './map.scss';
+import './map.css';
 
 class Map extends Component {
     constructor(props) {
         super(props);
-        this.state = { };
+        this.state = {map: initMap(null) };
     }
 
     componentDidMount() {
-       initMap();
-       
-    }
+       let target = document.getElementById("olmap");
+       this.state.map.setTarget(target)
+     }
 
     render() { 
-        return <div id="map" style={{  width: '100vw', height: '100vh' }} ></div>
+        return <>
+            <Layout>
+                <Legend map={this.state.map}/>
+                <Content > 
+                    <div id="olmap" style={{width:"100%", height:"100vh"}}  >
+                        <div id="labelLayer"></div>
+                    </div> 
+                </Content>
+            </Layout>
+         </>
     }
 }
 
