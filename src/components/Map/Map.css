@@ -2,3 +2,10 @@
   left: auto;
   right: 4px;
 }
+
+.popupContent {
+  overflow-y: scroll;
+  max-height: 80px;
+  background-color: #088;
+}
+

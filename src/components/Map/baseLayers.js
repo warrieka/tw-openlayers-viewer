@@ -15,6 +15,13 @@ for (let z = 0; z < 21; ++z) {
   matrixIds[z] = z;
 }
 
+let tw_Mapbox = new XYZ({
+    name: "Trage wegen", id: 'tw_Mapbox', 
+    attributions: ["trage wegen vzw"],
+    url: "https://api.mapbox.com/styles/v1/tragewegenantwerpen/ckgtudjm12i7819pfgynlwr07/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidHJhZ2V3ZWdlbmFudHdlcnBlbiIsImEiOiJjanNidDBhMzgwMmNjNGFwZmZnemFydXZnIn0.wbWyb0tpUuCfIvzF2KuPKQ",
+    minZoom: 0 , maxZoom: 22
+})
+
 let osm = new OSM();
 
 let ngi = new XYZ({
@@ -77,6 +84,17 @@ const baselayers = [ {id:"ngi", source: ngi, name: "Basiskaart Belgie, NGI"},
                      {id:"grb", source: grb, name: "Basiskaart Vlaanderen"},
                      {id:"abw", source: abw, name: "Atlas der Buurtwegen"},
                      {id:"lufo", source: lufo, name: "Luchtfoto"},
-                    {id:"osm", source: osm,  name: "Openstreetmap" } ]
-export {ngi, grb, abw, lufo, osm};
+                     {id:"osm", source: osm,  name: "Openstreetmap" },
+                     {id:'tw_Mapbox', source: tw_Mapbox, name: "Basiskaart Trage wegen"} ]
+export {ngi, grb, abw, lufo, osm, tw_Mapbox};
 export default baselayers;
+
+
+
+// import MapboxVector from 'ol/layer/MapboxVector';
+// import TileLayer from 'ol/layer/Tile';
+// const tw_Mapbox = new MapboxVector({
+//    styleUrl: 'mapbox://styles/tragewegenantwerpen/ckgtudjm12i7819pfgynlwr07',
+//     accessToken:
+//     'pk.eyJ1IjoidHJhZ2V3ZWdlbmFudHdlcnBlbiIsImEiOiJjanNidDBhMzgwMmNjNGFwZmZnemFydXZnIn0.wbWyb0tpUuCfIvzF2KuPKQ',
+//   });

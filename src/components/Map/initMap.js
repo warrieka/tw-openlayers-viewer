@@ -1,13 +1,14 @@
 import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import View from 'ol/View';
-import {ngi} from './baseLayers';
+import {tw_Mapbox} from './baseLayers';
 import {ScaleLine} from 'ol/control';
 
 //initial background
 const background = new TileLayer({
-    source: ngi
-  });
+    title: 'Achtergrond',
+    source: tw_Mapbox
+   });
 
 //initial View 
 const viewer = new View({
@@ -17,7 +18,7 @@ const viewer = new View({
     });
 
 const initMap = () => {
-    window.map = new Map({
+    let map = new Map({
         layers: [background],
         view: viewer
     });

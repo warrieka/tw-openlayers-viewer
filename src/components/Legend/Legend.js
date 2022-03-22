@@ -14,34 +14,30 @@ import logo from '../../images/logo.svg';
 
 // maps 
 import {background, viewer} from '../Map/initMap';
+import {addVectorLayer} from './tools'
 import {fromLonLat} from 'ol/proj';
-import {addVectorLayer, vectorsources} from '../Map/vectorLayers';
+import {vectorsources} from '../Map/vectorLayers';
 import baselayers from '../Map/baseLayers';
-
 
 class Legend extends Component {
    constructor(props) {
       super(props);
-      this.basemaps = baselayers;
-      this.map = props.map;
-
-      this.state = {menuCollapse: false, adressuggestions: [],
+   //  window.map=  props.map;
+      this.state = { menuCollapse: false, adressuggestions: [],
+                     map: props.map,
                      vectors: vectorsources.map(o => {
-                                   o.lyr = addVectorLayer(this.map, o.source ); 
+                                   o.lyr = addVectorLayer(props.map, o.source, o.style, o.name); 
                                    return o;}),
-                     basemap: 'ngi'
+                     basemap: 'tw_Mapbox',
+                     basemaps: baselayers
                     };
-      //eventhandlers 
-      this.closemenuClick = this.closemenuClick.bind(this);
-      this.adresSearchChange = this.adresSearchChange.bind(this);
-      this.adresSearchSelect = this.adresSearchSelect.bind(this);
-   }
-   async adresSearchChange(val) {
+  }
+  adresSearchChange = async val => {
       let geoUri = "https://loc.geopunt.be/v4/Suggestion?q=" + val;
       let resp= await fetch(geoUri).then(r => r.json());
       this.setState({adressuggestions: resp.SuggestionResult.map(e => ( {value: e} )) }) 
-   }
-   async adresSearchSelect() {
+  }
+  adresSearchSelect = async () => {
       if( this.state.adressuggestions.length == 0 ){ return; }
       let q = this.state.adressuggestions[0].value;
       let geoUri = "https://loc.geopunt.be/v4/Location?q=" + q;
@@ -55,26 +51,23 @@ class Legend extends Component {
                    UpperRight[0]+50, UpperRight[1] +50];
       viewer.fit(bbox);	
   }
-
-  closemenuClick() {
+  closemenuClick = () => {
     this.setState(prevState => ({
       menuCollapse: !prevState.menuCollapse
     }));
   }
-  
-  toggleVector( idx){
+  toggleVector = idx => {
      let vectors = this.state.vectors;
      let v = !vectors[idx].lyr.getVisible();
      vectors[idx].lyr.setVisible( v );
      this.setState({vectors:vectors});
   }
-
-  activateBasemap(lyrId, idx){
-     let lyr = this.basemaps[idx]
+  activateBasemap = (lyrId, idx) => {
+     let lyr = this.state.basemaps[idx]
      background.setSource(lyr.source);
      this.setState({basemap:lyrId});
   }
-  
+
   render() {
     return (
         <IconContext.Provider value={{ color: "#ccc"}}>
@@ -97,7 +90,7 @@ class Legend extends Component {
                   {this.state.vectors.map( (o,i) => {
                         return (
                         <Menu.Item key={o.id} disabled >
-                            <Checkbox style={{padding: '5px', color:'white'}}
+                            <Checkbox style={{padding: '5px', color: 'white'}}
                                 onChange={this.toggleVector.bind(this, i)} 
                                 checked={this.state.vectors[i].lyr.getVisible() }>
                             {o.name}</Checkbox>
@@ -106,9 +99,10 @@ class Legend extends Component {
                   })}
                   </SubMenu>
                   <SubMenu key="background" title="Achtergrond" icon={<FaMap />} >
-                  {this.basemaps.map( (o,i) => {
+                  {this.state.basemaps.map( (o,i) => {
                         return ( 
-                        <Menu.Item onClick={this.activateBasemap.bind(this, o.id, i)} key={o.id} >
+                        <Menu.Item className={ this.state.basemap == o.id  ?"ant-menu-item-selected":''}
+                          onClick={this.activateBasemap.bind(this, o.id, i)} key={o.id} >
                             {o.name}
                         </Menu.Item> 
                         )	
