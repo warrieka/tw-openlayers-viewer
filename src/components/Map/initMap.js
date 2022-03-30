@@ -1,20 +1,22 @@
 import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import View from 'ol/View';
-import {tw_Mapbox} from './baseLayers';
+import baseLayers from './baseLayers';
 import {ScaleLine} from 'ol/control';
 
+let baseMap = baseLayers.find(e=> (e.id === 'tw_Mapbox'));
+ 
 //initial background
 const background = new TileLayer({
     title: 'Achtergrond',
-    source: tw_Mapbox
+    source: baseMap.source
    });
 
 //initial View 
 const viewer = new View({
         center: [464468, 6612547],
         zoom: 9, maxZoom: 21, minZoom: 7,
-        extent: [206631, 6296658, 748135, 6805302]
+        extent: [177852,6078083,968831,6920858] 
     });
 
 const initMap = () => {
