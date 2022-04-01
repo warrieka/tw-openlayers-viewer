@@ -1,27 +1,31 @@
-import Overlay from 'ol/Overlay';
 
-export default class popup{
+import {drawLayer} from './initMap'
+import Feature from 'ol/Feature';
+
+class popup{
   constructor(map, callback){
-    this.popup = new Overlay({
-      element: document.getElementById('idPopup'),
-      positioning: 'center-center',
-      stopEvent: false, 
-      offset: [0,-10]
-    });
-
-    map.addOverlay(this.popup);
-    map.on('click', evt => {
-      map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
-        if (layer){
-           if (layer.get("title") !== "Achtergrond") {
-              this.popup.setPosition(evt.coordinate);
-              let attrs = Object.entries(feature.getProperties()).filter(e=> 
-                            (typeof e[1] == 'number' || typeof e[1] == 'string'));
-              callback(layer.get("title") , attrs  );
-           }
-           return; //== only for the first one
-        }
-      }, {hitTolerance: 6});
+    this.map = map;
+    this.map.on('click', evt => {
+      map.forEachFeatureAtPixel(evt.pixel, this.onFeature(callback), {hitTolerance: 6});
     });
   }
+
+  onFeature(callback) {
+    return (feature, layer) => {
+      if (layer) {
+        let title = layer.get("title") ;
+        if ( !(title == "Achtergrond" || title == 'draw') ) {
+          let geom = feature.getGeometry();
+          drawLayer.getSource().addFeature(new Feature({geometry: geom}));
+
+          let attrs = Object.entries(
+            feature.getProperties()).filter(e => (typeof e[1] == 'number' || typeof e[1] == 'string'));
+          callback(title, attrs, geom);
+        }
+        return;
+      }
+    };
+  }
 }
+
+export default popup;

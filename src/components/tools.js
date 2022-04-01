@@ -26,6 +26,7 @@ const urlParams = () => {
     return { center: xy, zoom: z, logo: logo }
 }
 
+
 const VectorLegendSVG = (styleCache, viewBoxWidth) => {
     let step = 30;
     let viewBoxHeight = (styleCache.length * step) + 20;

@@ -33,7 +33,7 @@ const tw_wijz_VLBr_wfs = new VectorSource({
 });
 
 //Trage wegen
-const tragewegenWFS = new VectorSource({
+const tragewegen_wfs = new VectorSource({
     format: new GML3(), // GML because ESRI does noet support GeoJSON
     url: function (extent) {
       let typeName = 'dataservices_TrageWegen:F_TrageWegen';
@@ -47,35 +47,35 @@ const tragewegenWFS = new VectorSource({
   });
  
 //styling functie voor trage wegen
-function tragewegenStyle(feature) {
+const tragewegen_stl = feature => {
   let TW_JUR_STATUUT = feature.get('TW_JUR_STATUUT');
   let TW_TOEGANKELIJK = feature.get("TW_TOEGANKELIJK");
   let TW_ZICHTBAAR = feature.get("TW_TOEGANKELIJK");
 
   if ((TW_JUR_STATUUT == 2 && TW_TOEGANKELIJK == 1 && TW_ZICHTBAAR == -8) ||
     (TW_JUR_STATUUT == 2 && TW_TOEGANKELIJK == 1 && TW_ZICHTBAAR == 1)) {
-    return tw_styleCache.find(e => (e.id == "greenline")).style;
+    return tragewegen_cache.find(e => (e.id == "greenline")).style;
   }
   if (TW_JUR_STATUUT == 2 && TW_TOEGANKELIJK == 1 && TW_ZICHTBAAR == 2) {
-    return tw_styleCache.find(e => (e.id == "greenDot")).style;
+    return tragewegen_cache.find(e => (e.id == "greenDot")).style;
   }
   if (TW_JUR_STATUUT == 2 && TW_TOEGANKELIJK == 2) {
-    return tw_styleCache.find(e => (e.id == "greenDash")).style;
+    return tragewegen_cache.find(e => (e.id == "greenDash")).style;
   }
   if ((TW_JUR_STATUUT != 2 && TW_TOEGANKELIJK == 1 && TW_ZICHTBAAR == -8) ||
     (TW_JUR_STATUUT != 2 && TW_TOEGANKELIJK == 1 && TW_ZICHTBAAR == 1)) {
-    return tw_styleCache.find(e => (e.id == "blueline")).style;
+    return tragewegen_cache.find(e => (e.id == "blueline")).style;
   }
   if (TW_JUR_STATUUT != 2 && TW_TOEGANKELIJK == 1 && TW_ZICHTBAAR == 2) {
-    return tw_styleCache.find(e => (e.id == "blueDot")).style;
+    return tragewegen_cache.find(e => (e.id == "blueDot")).style;
   }
   if (TW_JUR_STATUUT != 2 && TW_TOEGANKELIJK == 2) {
-    return tw_styleCache.find(e => (e.id == "blueDash")).style;
+    return tragewegen_cache.find(e => (e.id == "blueDash")).style;
   }
 }
 
 //styling cache voor trage wegen
-const tw_styleCache = [
+const tragewegen_cache = [
  {
   id: "greenline",
   name: "Rooilijn in Atlas der Buurtwegen - toegankelijk",
@@ -142,12 +142,12 @@ const tw_styleCache = [
 
 
 //styling Wijzigingen Oost Vlaanderen
-let tw_wijz_OVL_stl = new Style({
+const tw_wijz_OVL_stl = new Style({
   stroke: new Stroke({
     color: '#138732', width: 2
   })
 })
-let ttw_wijz_OVL_cache = [ {
+const ttw_wijz_OVL_cache = [ {
   id: 'darkgreenline',
   name: "Wijzigingen Atlas Buurtwegen Oost-Vlaanderen", 
   style : tw_wijz_OVL_stl
@@ -167,7 +167,7 @@ let tw_wijz_VLBr_cache = [ {
 }]
 
 const vectorsources = [ 
-  {id:"trw", source: tragewegenWFS, name: "Trage wegen", style: tragewegenStyle, styleCache: tw_styleCache, minZ: 12 } ,
+  {id:"trw", source: tragewegen_wfs, name: "Trage wegen", style: tragewegen_stl, styleCache: tragewegen_cache, minZ: 12 } ,
   {id:"tw_wijz_VLBr_wfs", source: tw_wijz_VLBr_wfs, name: "Wijz. Vlaams-Brabant", style: 
                                     tw_wijz_VLBr_stl, styleCache: tw_wijz_VLBr_cache, minZ: 12 } ,
   {id:"tw_wijz_OVL_wfs", source: tw_wijz_OVL_wfs, name: "Wijz. Oost-Vlaanderen", style: 

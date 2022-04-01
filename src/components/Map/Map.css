@@ -9,3 +9,13 @@
   background-color: #088;
 }
 
+#olmap{
+  width:100%; 
+  height:100vh;
+  cursor: crosshair;
+}
+
+#olmap:active {
+  cursor: grab;
+}
+
