@@ -1,5 +1,28 @@
 import {Vector as VectorLayer} from 'ol/layer';
-import {fromLonLat} from 'ol/proj';
+import {fromLonLat, transform} from 'ol/proj';
+import {register} from 'ol/proj/proj4';
+import proj4 from 'proj4';
+
+proj4.defs("EPSG:31370","+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 "+
+    "+lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl "+
+    "+towgs84=-106.869,52.2978,-103.724,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs");
+register(proj4);
+
+
+const polygonArea = geom =>  {
+    geom.transform('EPSG:3857', "EPSG:31370");
+    let area = geom.getArea().toFixed(2);
+    geom.transform( "EPSG:31370", 'EPSG:3857',);
+    return area;
+}
+
+const lineLength = geom =>  {
+    geom.transform('EPSG:3857', "EPSG:31370");
+    let area = geom.getLength().toFixed(2);
+    geom.transform( "EPSG:31370", 'EPSG:3857',);
+    return area;
+}
+
 
 const addVectorLayer = (map, dataSource, style, title, minZ=11) => {
     let vector = new VectorLayer({
@@ -59,4 +82,4 @@ const VectorLegendSVG = (styleCache, viewBoxWidth) => {
     );
   };
 
-export {addVectorLayer, urlParams, VectorLegendSVG};
+export {addVectorLayer, urlParams, VectorLegendSVG, polygonArea, lineLength};

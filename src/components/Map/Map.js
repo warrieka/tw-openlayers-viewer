@@ -23,7 +23,7 @@ class Map extends Component {
     componentDidMount(){
        let target = document.getElementById("olmap");
        this.state.map.setTarget(target);
-       new popup(this.state.map, this.infoFound);
+       this.popup = new popup(this.state.map, this.infoFound);
      }
 
     printer = async () => {
@@ -72,8 +72,8 @@ class Map extends Component {
                 })}
             </div>
 
-            <Layout style={{display: this.state.printing ?'none':'flex' }} >
-                <Legend map={this.state.map} printFunc={this.printer} />
+            <Layout style={{display: this.state.printing ?'none':'flex' }} >  {/**/}
+                <Legend map={this.state.map} printFunc={this.printer} activeToolChange={tool => (this.popup.tool = tool)} />
                 <Content > 
                     <div id="olmap"></div> 
                 </Content>

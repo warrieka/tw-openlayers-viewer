@@ -15,7 +15,7 @@ import logo from '../../images/logo.svg';
 
 // maps 
 import {background, drawLayer, viewer} from '../Map/initMap';
-import {addVectorLayer, urlParams, VectorLegendSVG} from '../tools'
+import {addVectorLayer, urlParams, VectorLegendSVG, lineLength, polygonArea} from '../tools'
 import {fromLonLat} from 'ol/proj';
 import vectorsources from '../../vectorLayers';
 import baselayers from '../../baseLayers';
@@ -24,11 +24,9 @@ import {addMeasureLine, addMeasureArea, removeMeasure} from './DrawTool'
 class Legend extends Component {
    constructor(props) {
       super(props);
-      this.params = urlParams();
-
-
+      this.intialParams = urlParams();
       this.state = { menuCollapse: innerWidth < 600, adressuggestions: [],
-                     map: props.map, activeTool: null, 
+                     map: props.map, activeTool: 'identify', 
                      vectors: vectorsources.map(o => {
                                o.lyr = addVectorLayer(props.map, o.source, o.style, o.name, o.minZ); 
                                return o;}),
@@ -37,8 +35,8 @@ class Legend extends Component {
                     };     
     }
   componentDidMount() {
-     if(this.params.center ) { viewer.setCenter( this.params.center ); }
-     if(this.params.zoom ) { viewer.setZoom( this.params.zoom ); }
+     if(this.intialParams.center ) { viewer.setCenter( this.intialParams.center ); }
+     if(this.intialParams.zoom ) { viewer.setZoom( this.intialParams.zoom ); }
   }
 
   adresSearchChange = async val => {
@@ -72,20 +70,25 @@ class Legend extends Component {
       this.setState({basemap:lyrId});
     }
 
+  setActiveTool = tool => {
+    this.setState({activeTool: tool });
+    this.props.activeToolChange( tool );
+  }
   measureLine = () => {
     if(this.state.activeTool == 'meten'){ 
-      this.setState({activeTool: null });
+      this.setActiveTool('identify');
       removeMeasure(this.state.map);
       drawLayer.getSource().clear();
       message.destroy();
     }
     else{ 
       this.setState({activeTool: 'meten'  }); 
+      this.setActiveTool( 'meten' );
       addMeasureLine(this.state.map, feat => {
-            let line = feat.getGeometry();
+            let geom = feat.getGeometry();
             let msgCfg = {
               icon: <FaRuler />,
-              content: ` Gemeten afstand: ${line.getLength().toFixed(2)} m`,
+              content: ` Gemeten afstand: ${lineLength(geom)} m`,
               style: {marginTop: '20vh'}, 
               onClick: () => {message.destroy(); drawLayer.getSource().clear();}
             }
@@ -93,21 +96,20 @@ class Legend extends Component {
       });
     }
   }  
-
   measureArea = () => {
     if(this.state.activeTool == 'area'){ 
-      this.setState({activeTool: null });
+      this.setActiveTool('identify');
       removeMeasure(this.state.map);
       drawLayer.getSource().clear();
       message.destroy();
     }
     else{ 
-      this.setState({activeTool: 'area'  }); 
+      this.setActiveTool('area');
       addMeasureArea(this.state.map, feat => {
-            let opp = feat.getGeometry();
+            let geom = feat.getGeometry();
             let msgCfg = {
               icon: <FaRulerCombined />,
-              content: ` Gemeten oppervlakte: ${opp.getArea().toFixed(2)} m²`,
+              content: ` Gemeten oppervlakte: ${polygonArea(geom)} m²`,
               style: {marginTop: '20vh'}, 
               onClick: () => {message.destroy(); drawLayer.getSource().clear();}
             }
@@ -115,7 +117,6 @@ class Legend extends Component {
       });
     }
   }  
-
 
   render() {
     
@@ -156,7 +157,7 @@ class Legend extends Component {
                  onCollapse={c => this.setState({menuCollapse:c})}
                  style={{height:"100vh", overflowY:'auto', overflowX: 'hidden'}}
                  width={240} className="site-layout-background">
-              <div style={{paddingTop: 10, display: this.params.logo ? "block" : 'none'  }} >
+              <div style={{paddingTop: 10, display: this.intialParams.logo ? "block" : 'none'  }} >
                   <img src={logo} id="Logo" style={{width: this.state.menuCollapse ? 40 : 100, alignSelf: 'center' }} />
               </div> 
 

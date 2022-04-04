@@ -24,13 +24,6 @@ let tw_Mapbox = new XYZ({
 
 let osm = new OSM();
 
-
-
-// let =	
-// let = 
-// let =	
-// let =	
-
 let ngi1873 =	new XYZ({
   name: "NGI Basemap 1873", id: 'ngi1873', 
   attributions: ["Nationaal Geografisch Instituut"],
