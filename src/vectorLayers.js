@@ -98,7 +98,7 @@ const tragewegen_cache = [
   })
 }, {
   id: 'greenDot',
-  name: "Rooilijn in Atlas der Buurtwegen - toegankelijk, maar niet zichtbaar op het terrein",
+  name: "Rooilijn in Atlas der Buurtwegen, toegankelijk, maar niet zichtbaar op terrein",
   style: new Style({
     stroke: new Stroke({
       color: '#12db2a',
@@ -109,7 +109,7 @@ const tragewegen_cache = [
   })
 }, {
   id: 'blueline',
-  name: "andere - toegankelijk",
+  name: "Andere - toegankelijk",
   style: new Style({
     stroke: new Stroke({
     color:  '#1262db',
@@ -118,7 +118,7 @@ const tragewegen_cache = [
   })
 }, {
   id: 'blueDash',
-  name: "andere - ontoegankelijk",
+  name: "Andere - ontoegankelijk",
   style: new Style({
     stroke: new Stroke({
       color:  '#1262db',
@@ -129,7 +129,7 @@ const tragewegen_cache = [
   }),
 }, {
   id: 'blueDot',
-  name: "andere - toegankelijk, maar niet zichtbaar op het terrein",
+  name: "Andere - toegankelijk, maar niet zichtbaar op terrein",
   style : new Style({
     stroke: new Stroke({
       color:  '#1262db',

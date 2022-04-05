@@ -51,32 +51,48 @@ const urlParams = () => {
 
 
 const VectorLegendSVG = (styleCache, viewBoxWidth) => {
-    let step = 30;
+    let step = 25;
     let viewBoxHeight = (styleCache.length * step) + 20;
     return (
       <svg width={viewBoxWidth} height={viewBoxHeight} viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}>
           {styleCache.map( (o,i) => {
              let stroke = o.style.getStroke();
-             /// TODO: other geometry types. 
-            //  let fill =  o.style.getFill()
-            //  let icon =  o.style.getImage()
-             ///
-             let[strokeClr, width, dash]= ['','',''];
+             /// POLYGON
+             let fill =  o.style.getFill();
+             /// POINT, only icon is supported
+             let icon =  o.style.getImage();
+             /// Default legende icon
+             let legendeIcon = <text fill='#002140' x="0" y={(i*step +30).toString()}>Style not supported</text>
 
-             if(stroke){
-                strokeClr = stroke.getColor();
-                width = stroke.getWidth() ? stroke.getWidth().toString() : '';
-                dash= stroke.getLineDash() ? stroke.getLineDash().join(' '): '';
+             if(icon){
+                let iconUrl = icon.toDataURL ? icon.toDataURL() : icon.getSrc ? icon.getSrc() : null;
+                if(iconUrl != null) {
+                    legendeIcon = <image 
+                            href={iconUrl}  x="0" y={(i*step +20).toString()} height="20" width="20"/>
+                }    
              }
-             return <g key={o.id}  >
-                  <text fill='#002140' x="0"  y={(i*step +20).toString()}>{o.name}</text>
-                  <line 
-                    x1={(viewBoxWidth * 0.2).toString()} 
-                    x2={(viewBoxWidth * 0.8).toString()} 
-                    y1={(i*step +30).toString()} 
-                    y2={(i*step +30).toString()} 
-                   stroke={strokeClr} strokeWidth={width} strokeDasharray={dash} /> 
-                </g>
+             else if(fill){
+                let fillColor = fill.getColor();
+                let strokeColor = stroke.getColor();
+                let width = stroke.getWidth().toString();
+                legendeIcon = <rect   
+                     x="2" y={(i*step +20).toString()} height="18" width="18"
+                     fill={fillColor} stroke={strokeColor} strokeWidth={width} /> 
+             }
+             else if(stroke){
+                let color = stroke.getColor();
+                let width = stroke.getWidth().toString();
+                let dash= stroke.getLineDash() ? stroke.getLineDash().join(' '): '';
+                legendeIcon = <line x1='0' x2='20'
+                                    y1={(i*step +0).toString()} 
+                                    y2={(i*step +20).toString()} 
+                                    stroke={color} strokeWidth={width} strokeDasharray={dash} /> 
+             }
+             return (
+                <g key={o.id}  >
+                  <text fill='#002140' x="23"  y={(i*step +20).toString()}>{o.name}</text>
+                  {legendeIcon}
+                </g> )
           } )}
       </svg>
     );
