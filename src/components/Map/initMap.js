@@ -1,7 +1,7 @@
 import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import View from 'ol/View';
-import baseLayers from '../../baseLayers';
+import {baselayers} from '../../baseLayers';
 import {ScaleLine} from 'ol/control';
 import {Vector as VectorSource} from 'ol/source';
 import {Vector as VectorLayer} from 'ol/layer';
@@ -11,7 +11,7 @@ import {urlParams} from '../tools'
 
 let logo = urlParams().logo
 
-let baseMap = baseLayers.find(e=> (e.id === 'tw_Mapbox'));
+let baseMap = baselayers.find(e=> (e.id === 'tw_Mapbox'));
  
 //initial background
 const background = new TileLayer({

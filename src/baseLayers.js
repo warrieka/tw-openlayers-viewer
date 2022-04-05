@@ -115,13 +115,14 @@ let abw = new WMTS({
       wrapX: true,
   });
 
-
 const baselayers = [         
-  {id:"nginow",  source: nginow , name: "NGI Basiskaart"},
+  {id:"nginow",  source: nginow , name: "Huidige NGI Basiskaart"},
   {id:"grb", source: grb, name: "Basiskaart Vlaanderen"},
-  {id:"lufo", source: lufo, name: "Luchtfoto"},
+  {id:"lufo", source: lufo, name: "Meest recente luchtfoto"},
   {id:"osm", source: osm,  name: "Openstreetmap" },
-  {id:'tw_Mapbox', source: tw_Mapbox, name: "Basiskaart Trage wegen"},
+  {id:'tw_Mapbox', source: tw_Mapbox, name: "Basiskaart Trage wegen"} ];
+
+const histolayers = [
   {id:"abw", source: abw, name: "Atlas der Buurtwegen"},
   {id:"ngi1873", source: ngi1873, name: "NGI Basiskaart, 1873"},
   {id:"ngi1904", source: ngi1904, name: "NGI Basiskaart, 1904"},
@@ -129,12 +130,14 @@ const baselayers = [
   {id:"ngi1969", source: ngi1969, name: "NGI Basiskaart, 1969"},
   {id:"ngi1981", source: ngi1981, name: "NGI Basiskaart, 1981"},
   {id:"ngi1989", source: ngi1989, name: "NGI Basiskaart, 1989"}
- ]
+ ];
 
+export {baselayers, histolayers};
 export default baselayers;
 
-
-
+////////////////////////////////
+// ALT Methode for mapbox layers: 
+////////////////////////////////
 // import MapboxVector from 'ol/layer/MapboxVector';
 // import TileLayer from 'ol/layer/Tile';
 // const tw_Mapbox = new MapboxVector({

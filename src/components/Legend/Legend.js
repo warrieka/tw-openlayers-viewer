@@ -6,9 +6,9 @@ const { SubMenu } = Menu;
 
 //import icons and css
 import { FiLayers } from "react-icons/fi";
-import { FaMap, FaSearch, FaList, FaTools, 
+import { FaMap, FaSearch, FaList, FaTools,
                   FaRulerCombined, FaRuler} from "react-icons/fa";
-import {FiPrinter} from "react-icons/fi";
+import {FiPrinter, FiCalendar} from "react-icons/fi";
 import 'antd/dist/antd.css';
 import "./Legend.css";
 import logo from '../../images/logo.svg';
@@ -18,7 +18,7 @@ import {background, drawLayer, viewer} from '../Map/initMap';
 import {addVectorLayer, urlParams, VectorLegendSVG, lineLength, polygonArea} from '../tools'
 import {fromLonLat} from 'ol/proj';
 import vectorsources from '../../vectorLayers';
-import baselayers from '../../baseLayers';
+import {baselayers, histolayers} from '../../baseLayers';
 import {addMeasureLine, addMeasureArea, removeMeasure} from './DrawTool'
 
 class Legend extends Component {
@@ -31,7 +31,7 @@ class Legend extends Component {
                                o.lyr = addVectorLayer(props.map, o.source, o.style, o.name, o.minZ); 
                                return o;}),
                      basemap: 'tw_Mapbox',
-                     basemaps: baselayers
+                     basemaps: baselayers, histomaps: histolayers
                     };     
     }
   componentDidMount() {
@@ -64,10 +64,16 @@ class Legend extends Component {
       vectors[idx].lyr.setVisible( v );
       this.setState({vectors:vectors});
     }
-  activateBasemap = (lyrId, idx) => {
-      let lyr = this.state.basemaps[idx]
-      background.setSource(lyr.source);
+  activateBasemap = (lyrId, sublayer) => {
       this.setState({basemap:lyrId});
+      if(sublayer == 'base'){
+        let lyr = this.state.basemaps.find( e=> (e.id == lyrId));
+        background.setSource(lyr.source);
+      }
+      else if(sublayer == 'histo'){
+        let lyr = this.state.histomaps.find( e=> (e.id == lyrId));
+        background.setSource(lyr.source);
+      }
     }
 
   setActiveTool = tool => {
@@ -183,11 +189,23 @@ class Legend extends Component {
                         )
                   })}
                   </SubMenu>
-                  <SubMenu key="background" title="Achtergrond" icon={<FaMap />} >
+
+                  <SubMenu key="histomap" title="Historische kaarten" icon={<FiCalendar />} >
+                  {this.state.histomaps.map( (o,i) => {
+                        return ( 
+                        <Menu.Item className={ this.state.basemap == o.id  ?"ant-menu-item-selected":''}
+                          onClick={() => this.activateBasemap(o.id, 'histo')} key={o.id} >
+                            {o.name}
+                        </Menu.Item> 
+                        )	
+                  })}
+ 
+                  </SubMenu>
+                  <SubMenu key="background" title="Achtergrond kaarten" icon={<FaMap />} >
                   {this.state.basemaps.map( (o,i) => {
                         return ( 
                         <Menu.Item className={ this.state.basemap == o.id  ?"ant-menu-item-selected":''}
-                          onClick={() => this.activateBasemap(o.id, i)} key={o.id} >
+                          onClick={() => this.activateBasemap(o.id, 'base')} key={o.id} >
                             {o.name}
                         </Menu.Item> 
                         )	

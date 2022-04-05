@@ -175,4 +175,5 @@ const vectorsources = [
 
 ];
 
+export {vectorsources};
 export default vectorsources;
