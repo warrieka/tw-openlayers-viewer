@@ -21,11 +21,10 @@ const background = new TileLayer({
 
 //initial View 
 const viewer = new View({
-        center: [464468, 6612547],
-        zoom: 9, maxZoom: 21, minZoom: 7,
+        center: [414243,6627955],
+        zoom: 13, maxZoom: 21, minZoom: 7,
         extent: [177852,6078083,968831,6920858] 
     });
-
 
 viewer.on('change', () => {
     let z = viewer.getZoom().toFixed(2);
@@ -65,3 +64,14 @@ const initMap = () => {
 }
 
 export {initMap, background, viewer, drawLayer};
+
+////////////////////////////////
+// ALT Methode for mapbox layers: 
+////////////////////////////////
+// import MapboxVector from 'ol/layer/MapboxVector';
+// import TileLayer from 'ol/layer/Tile';
+// const tw_Mapbox = new MapboxVector({
+//    styleUrl: 'mapbox://styles/tragewegenantwerpen/ckgtudjm12i7819pfgynlwr07',
+//     accessToken:
+//     'pk.eyJ1IjoidHJhZ2V3ZWdlbmFudHdlcnBlbiIsImEiOiJjanNidDBhMzgwMmNjNGFwZmZnemFydXZnIn0.wbWyb0tpUuCfIvzF2KuPKQ',
+//   });

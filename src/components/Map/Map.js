@@ -16,7 +16,7 @@ class Map extends Component {
     constructor(props) {
         super(props);
         this.state = {map: initMap() , printing: false, 
-            popupTitle: '', popupContent: [], popupVisible: false };
+            popupTitle: '', popupContent:'', popupVisible: false };
         window.addEventListener("afterprint", () =>  this.setState({ printing: false}) );
     }
 
@@ -43,6 +43,7 @@ class Map extends Component {
 
     infoFound = (title, content) => {
         this.setState({popupVisible: true, popupContent: content, popupTitle: title });
+        document.getElementById('popContent').innerHTML = content;
     }
 
     closeModal = () => {
@@ -57,11 +58,7 @@ class Map extends Component {
                    visible={this.state.popupVisible}
                    bodyStyle={{height: document.body.scrollHeight /2 , overflowY:'scroll'}}
                    >
-                {this.state.popupContent.map( (e,i) =>{
-                    return (
-                        <span key={i} ><b>{e[0]}</b>: {e[1]}<br/></span>
-                    )
-                })} 
+                  <div id='popContent'></div>  
             </Modal>
 
             <div style={{display: this.state.printing ?'block':'none'}}>

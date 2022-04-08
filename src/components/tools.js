@@ -19,14 +19,14 @@ const polygonArea = geom =>  {
 const lineLength = geom =>  {
     geom.transform('EPSG:3857', "EPSG:31370");
     let area = geom.getLength().toFixed(2);
-    geom.transform( "EPSG:31370", 'EPSG:3857',);
+    geom.transform( "EPSG:31370", 'EPSG:3857',);s
     return area;
 }
 
 
-const addVectorLayer = (map, dataSource, style, title, minZ=11) => {
+const addVectorLayer = (map, dataSource, style, title, minZ=11, visible=true) => {
     let vector = new VectorLayer({
-        title: title, 
+        title: title, visible: visible,
         source: dataSource, minZoom: minZ,
         style: style
         });

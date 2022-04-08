@@ -28,7 +28,7 @@ class Legend extends Component {
       this.state = { menuCollapse: innerWidth < 600, adressuggestions: [],
                      map: props.map, activeTool: 'identify', 
                      vectors: vectorsources.map(o => {
-                               o.lyr = addVectorLayer(props.map, o.source, o.style, o.name, o.minZ); 
+                               o.lyr = addVectorLayer(props.map, o.source, o.style, o.name, o.minZ, o.visible); 
                                return o;}),
                      basemap: 'tw_Mapbox',
                      basemaps: baselayers, histomaps: histolayers

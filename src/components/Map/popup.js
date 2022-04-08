@@ -1,6 +1,7 @@
 
 import {drawLayer} from './initMap'
 import Feature from 'ol/Feature';
+import vectorLayers from '../../vectorLayers';
 
 class popup{
   constructor(map, callback, tool='identify'){
@@ -18,8 +19,18 @@ class popup{
         if ( !(title == "Achtergrond" || title == 'draw') ) {
           let geom = feature.getGeometry();
           drawLayer.getSource().addFeature(new Feature({geometry: geom}));
-          let attrs = Object.entries(
-            feature.getProperties()).filter(e => (typeof e[1] == 'number' || typeof e[1] == 'string'));
+          let attrs = '';
+          let src = vectorLayers.find(e => e.name == title);
+          if(src && src.template){
+            attrs = src.template( feature.getProperties() );
+          }
+          else {
+            feature.getKeys().forEach(k => {
+              let v = feature.get(k);
+              if (typeof v == 'object') return;
+              attrs += `<b>${k}</b>: ${v}<br>`
+            })
+          }
           callback(title, attrs, geom);
         }
         return;
