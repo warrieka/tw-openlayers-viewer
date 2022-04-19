@@ -1,9 +1,9 @@
 // Configure the foreground vector layers
-import {bbox} from 'ol/loadingstrategy';
+import {bbox, all} from 'ol/loadingstrategy';
 import VectorSource from 'ol/source/Vector';
 import GML3 from 'ol/format/GML3';
 import GeoJSON from 'ol/format/GeoJSON';
-import {Stroke, Icon, Style} from 'ol/style';
+import {Stroke, Fill, Icon, Text, Style} from 'ol/style';
 import greenRoad from './images/greenRoad_lim.svg'
 
 //#region TRAGE_WEGEN
@@ -117,6 +117,47 @@ const tragewegen_cache = [
 }]
 //#endregion
 
+//#region PROVINCIES
+///info: https://geoservices.informatievlaanderen.be/overdrachtdiensten/VRBG/wfs?REQUEST=GetCapabilities&SERVICE=WFS
+const prov_wfs = new VectorSource({
+  format: new GeoJSON(), // GML because ESRI does noet support GeoJSON
+  url: function () {
+    let typeName = 'VRBG:Refprv';
+    let outputFormat = "json";
+    let uri = "https://geoservices.informatievlaanderen.be/overdrachtdiensten/VRBG/wfs?" + 
+    `service=wfs&version=2.0.0&request=GetFeature&typeName=${typeName}&outputFormat=${outputFormat}&srsname=EPSG:3857&count=50`;
+    return uri;
+  },
+  strategy: all,
+});
+///styling 
+let prov_stl = (feature, res) => {
+  let stl = prov_cache[0].style
+  stl.getText().setText(feature.get('NAAM'));
+  stl.getText().setScale(res < 300 ? 1.5 : 1);
+  return stl;
+}
+
+const prov_cache = [ {
+  id: 'okerPolygon',
+  name: "Provinciegrenzen", 
+  style : new Style({
+    text: new Text({
+      font:'normal 10px sans-serif',
+      fill: new Fill({
+        color: 'rgba(100,100,0,1)',
+      }),
+    }),
+    fill: new Fill({
+      color: 'rgba(244,217,165,0.3)'
+    }),
+    stroke: new Stroke({
+      color: 'rgba(240,240,0,1)', width: 2
+    })
+  })
+}]
+//#endregion
+
 //#region OOSTVLAANDEREN
 // Wijzigingen Oost-Vlaanderen 
 ///info: https://geodiensten.oost-vlaanderen.be/arcgis/services/MOB/OVL_buurtwegen_en_wijzigingen/MapServer/WFSServer?service=wfs&request=GetCapabilities&version=1.1.0
@@ -147,10 +188,12 @@ const tw_wijz_OVL_cache = [ {
 ///popup-template Wijzigingen Oost Vlaanderen
 const tw_wijz_OVL_tmpl = feat => `
 <b>detailplanNr:${feat.detailplanNr}</b>
-<p>gemeentenr: ${feat.gemeentenr}</p>
-<p>ID: ${feat.IDwijziging}</p>
-<p>Datum:  ${feat.datum}</p>
-<p><a target="_blank" href="${feat.scan}">scan</a></p>`
+<ul>
+<li>gemeentenr: ${feat.gemeentenr}</li>
+<li>ID: ${feat.IDwijziging}</li>
+<li>Datum:  ${feat.datum}</li>
+<li>Scan: <a target="_blank" href="${feat.scan}">${feat.scan}</a></li>
+</ul>`
 //#endregion
 
 //#region VLAAMSBRABANT
@@ -183,13 +226,14 @@ const tw_wijz_VLBr_cache = [ {
 ///popup-template Wijzigingen Vlaams-Brabant
 const tw_wijz_VLBr_tmpl = feat => `
 <b>ID: ${feat.DocumentID} </b> 
-<a href="${feat.rasterbeeld}" target="_blank" >
- <img src="${feat.rasterbeeld}" width="500" />
-</a>
-<p>Omschrijving: ${feat.Omschrijving}</p> 
-<p>Datum:  ${(new Date( Date.parse(feat.DATUM))).toLocaleDateString(
-    'nl-be', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) }</p> 
-`
+<ul>
+<li>Scan: <a href="${feat.rasterbeeld}" target="_blank" >
+${feat.rasterbeeld}
+</a></li>
+<li>Omschrijving: ${feat.Omschrijving}</li> 
+<li>Datum:  ${(new Date( Date.parse(feat.DATUM))).toLocaleDateString(
+    'nl-be', { weekday:"long", year:"numeric", month:"long", day:"numeric"}) }</li>
+</ul>`
 //#endregion
 
 //#region WESTVLAANDEREN
@@ -316,6 +360,8 @@ const tw_wijz_ANT_cache = [ {
 const vectorsources = [ 
   {id:"trw", source: tragewegen_wfs, name: "Trage wegen", visible: true, 
         style: tragewegen_stl,   styleCache: tragewegen_cache,   minZ: 12 } ,
+  {id:"prov", source: prov_wfs, name: "Provinciegrenzen",  visible: false, 
+        style: prov_stl, styleCache: prov_cache, minZ: 5 } ,
   {id:"tw_wijz_VLBr", source: tw_wijz_VLBr_wfs, name: "Wijz. Vlaams-Brabant",  visible: false, 
         style: tw_wijz_VLBr_stl, styleCache: tw_wijz_VLBr_cache, minZ: 12 , template: tw_wijz_VLBr_tmpl } ,
   {id:"tw_wijz_OVL",  source: tw_wijz_OVL_wfs,  name: "Wijz. Oost-Vlaanderen", visible: false, 

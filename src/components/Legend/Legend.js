@@ -168,11 +168,11 @@ class Legend extends Component {
                       <FaRulerCombined title='Oppervlakte Meten' style={{cursor:"pointer"}} size={22}
                                  className={this.state.activeTool == 'area'? 'toggle activeTool': 'toggle'} 
                                  onClick={this.measureArea} />
-                      <FaShareSquare title='toepassing delen' className="toggle" size={22}
+                      <FaShareSquare title='Kaart delen' className="toggle" size={22}
                               onClick={async () => {
                                       await navigator.clipboard.writeText(document.location.href);
                                       message.success(<>
-                                        De <a target='_blank' href={document.location.href} >Url</a> van de toepassing werd naar het klembord gestuurd<br/>
+                                        De <a target='_blank' href={document.location.href} >Link</a> naar de kaart werd naar het klembord gestuurd<br/>
                                        </>, 2);
                                     }
                               }/>  

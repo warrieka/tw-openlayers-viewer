@@ -16,7 +16,7 @@ class popup{
     return (feature, layer) => {
       if (layer && this.tool == 'identify') {
         let title = layer.get("title") ;
-        if ( !(title == "Achtergrond" || title == 'draw') ) {
+        if ( !(title == "Achtergrond" || title == 'draw' || title == 'Provinciegrenzen') ) {
           let geom = feature.getGeometry();
           drawLayer.getSource().addFeature(new Feature({geometry: geom}));
           let attrs = '';

@@ -55,7 +55,7 @@ const urlParams = () => {
 
 const VectorLegendSVG = (styleCache, viewBoxWidth) => {
     let step = 25;
-    let viewBoxHeight = (styleCache.length * step) + 20;
+    let viewBoxHeight = (styleCache.length * step) + 5;
     return (
       <svg width={viewBoxWidth} height={viewBoxHeight} viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}>
           {styleCache.map( (o,i) => {
@@ -79,7 +79,7 @@ const VectorLegendSVG = (styleCache, viewBoxWidth) => {
                 let strokeColor = stroke.getColor();
                 let width = stroke.getWidth().toString();
                 legendeIcon = <rect   
-                     x="2" y={(i*step +20).toString()} height="18" width="18"
+                     x="2" y={(i*step +5 ).toString()} height="18" width="18"
                      fill={fillColor} stroke={strokeColor} strokeWidth={width} /> 
              }
              else if(stroke){
