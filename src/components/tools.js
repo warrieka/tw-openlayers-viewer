@@ -1,5 +1,6 @@
 import {Vector as VectorLayer} from 'ol/layer';
-import {fromLonLat, transform} from 'ol/proj';
+
+import {fromLonLat} from 'ol/proj';
 import {register} from 'ol/proj/proj4';
 import proj4 from 'proj4';
 
@@ -38,15 +39,17 @@ const urlParams = () => {
     const params = (new URL(document.location)).searchParams;
     const trues = ["true", "1", "yes", ''];
     const logo = params.get("logo") ? trues.includes( params.get("logo").toLowerCase() ) : true;
+    const lyrs = params.get("lyrs") ? params.get("lyrs").split(',') : [];
+    const base =  params.get("base") ? params.get("base") : 'tw_Mapbox';
     let x = parseFloat( params.get("x"));
     let y = parseFloat( params.get("y"));
-    let z = parseInt( params.get("z"));
-    let xy = [464468, 6612547]; 
+    let z = params.get("z") ? parseInt( params.get("z")) : 13;
+    let xy = [414243,6627955]; 
     if( x && y ) {
         xy = fromLonLat([x,y]); 
     }
     z= z ? z : 8; 
-    return { center: xy, zoom: z, logo: logo }
+    return { center: xy, zoom: z, logo: logo, basemap: base, layers: lyrs }
 }
 
 
@@ -68,7 +71,7 @@ const VectorLegendSVG = (styleCache, viewBoxWidth) => {
                 let iconUrl = icon.toDataURL ? icon.toDataURL() : icon.getSrc ? icon.getSrc() : null;
                 if(iconUrl != null) {
                     legendeIcon = <image 
-                            href={iconUrl}  x="0" y={(i*step +20).toString()} height="20" width="20"/>
+                            href={iconUrl}  x="0" y={(i*step).toString()} height="20" width="20"/>
                 }    
              }
              else if(fill){

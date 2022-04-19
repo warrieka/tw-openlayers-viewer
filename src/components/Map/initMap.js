@@ -1,17 +1,20 @@
 import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import View from 'ol/View';
-import {baselayers} from '../../baseLayers';
+import {baselayers, histolayers} from '../../baseLayers';
 import {ScaleLine} from 'ol/control';
 import {Vector as VectorSource} from 'ol/source';
 import {Vector as VectorLayer} from 'ol/layer';
 import {Circle, Fill, Stroke, Style} from 'ol/style';
-import {toLonLat} from 'ol/proj';
+import {
+  DragRotateAndZoom,
+  defaults as defaultInteractions,
+} from 'ol/interaction';
 import {urlParams} from '../tools'
 
-let logo = urlParams().logo
+const params = urlParams();
+let baseMap = baselayers.find(e=> (e.id === params.basemap)) || histolayers.find(e=> (e.id === params.basemap)) ;
 
-let baseMap = baselayers.find(e=> (e.id === 'tw_Mapbox'));
  
 //initial background
 const background = new TileLayer({
@@ -25,15 +28,6 @@ const viewer = new View({
         zoom: 13, maxZoom: 21, minZoom: 7,
         extent: [177852,6078083,968831,6920858] 
     });
-
-viewer.on('change', () => {
-    let z = viewer.getZoom().toFixed(2);
-    let xy = toLonLat( viewer.getCenter() );
-    let x= xy[0].toFixed(5); let y = xy[1].toFixed(5);
-    let qry = `?logo=${logo}&x=${x}&y=${y}&z=${z}`
-    let newurl = location.protocol + "//" + location.host + location.pathname + qry;
-    history.pushState({path:newurl},'',newurl);
-} );
 
  const drawLayer = new VectorLayer({
     title: 'draw',
@@ -56,6 +50,7 @@ viewer.on('change', () => {
 
 const initMap = () => {
     let map = new Map({
+        interactions: defaultInteractions().extend([new DragRotateAndZoom()]),
         layers: [background, drawLayer],
         view: viewer
     });

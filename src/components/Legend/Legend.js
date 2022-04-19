@@ -6,7 +6,7 @@ const { SubMenu } = Menu;
 
 //import icons and css
 import { FiLayers } from "react-icons/fi";
-import { FaMap, FaSearch, FaList, FaTools,
+import { FaMap, FaSearch, FaList, FaTools, FaShareSquare, 
                   FaRulerCombined, FaRuler} from "react-icons/fa";
 import {FiPrinter, FiCalendar} from "react-icons/fi";
 import 'antd/dist/antd.css';
@@ -16,7 +16,7 @@ import logo from '../../images/logo.svg';
 // maps 
 import {background, drawLayer, viewer} from '../Map/initMap';
 import {addVectorLayer, urlParams, VectorLegendSVG, lineLength, polygonArea} from '../tools'
-import {fromLonLat} from 'ol/proj';
+import {fromLonLat, toLonLat} from 'ol/proj';
 import vectorsources from '../../vectorLayers';
 import {baselayers, histolayers} from '../../baseLayers';
 import {addMeasureLine, addMeasureArea, removeMeasure} from './DrawTool'
@@ -28,15 +28,33 @@ class Legend extends Component {
       this.state = { menuCollapse: innerWidth < 600, adressuggestions: [],
                      map: props.map, activeTool: 'identify', 
                      vectors: vectorsources.map(o => {
-                               o.lyr = addVectorLayer(props.map, o.source, o.style, o.name, o.minZ, o.visible); 
+                        o.lyr = addVectorLayer(props.map, o.source, o.style, o.name, o.minZ, 
+                            this.intialParams.layers.find(e => e == o.id) ? true : o.visible); 
                                return o;}),
-                     basemap: 'tw_Mapbox',
+                     basemap: this.intialParams.basemap,
                      basemaps: baselayers, histomaps: histolayers
                     };     
     }
   componentDidMount() {
      if(this.intialParams.center ) { viewer.setCenter( this.intialParams.center ); }
      if(this.intialParams.zoom ) { viewer.setZoom( this.intialParams.zoom ); }
+
+     let logo= this.intialParams.logo;
+
+     viewer.on('change', () => {
+      let z = viewer.getZoom().toFixed(2);
+      let lyrs = this.state.vectors.filter(e => e.lyr.getVisible()).map(e => e.id).join(',')
+      let xy = toLonLat( viewer.getCenter() );
+      let x = xy[0].toFixed(5); 
+      let y = xy[1].toFixed(5);
+      let qry = `?logo=${logo}&x=${x}&y=${y}&z=${z}&lyrs=${lyrs}&base=${this.state.basemap}`
+      let newurl = location.protocol + "//" + location.host + location.pathname + qry;
+      history.pushState({path:newurl},'',newurl);
+  } );
+  }
+
+  componentDidUpdate() {
+    viewer.changed();
   }
 
   adresSearchChange = async val => {
@@ -44,6 +62,7 @@ class Legend extends Component {
       let resp= await fetch(geoUri).then(r => r.json());
       this.setState({adressuggestions: resp.SuggestionResult.map(e => ( {value: e} )) }) 
     }
+
   adresSearchSelect = async () => {
       if( this.state.adressuggestions.length == 0 ){ return; }
       let q = this.state.adressuggestions[0].value;
@@ -58,12 +77,14 @@ class Legend extends Component {
                    UpperRight[0]+50, UpperRight[1] +50];
       viewer.fit(bbox);	
     }
+
   toggleVector = idx => {
       let vectors = this.state.vectors;
       let v = !vectors[idx].lyr.getVisible();
       vectors[idx].lyr.setVisible( v );
       this.setState({vectors:vectors});
     }
+
   activateBasemap = (lyrId, sublayer) => {
       this.setState({basemap:lyrId});
       if(sublayer == 'base'){
@@ -74,12 +95,14 @@ class Legend extends Component {
         let lyr = this.state.histomaps.find( e=> (e.id == lyrId));
         background.setSource(lyr.source);
       }
+      
     }
 
   setActiveTool = tool => {
     this.setState({activeTool: tool });
     this.props.activeToolChange( tool );
   }
+
   measureLine = () => {
     if(this.state.activeTool == 'meten'){ 
       this.setActiveTool('identify');
@@ -102,6 +125,7 @@ class Legend extends Component {
       });
     }
   }  
+
   measureArea = () => {
     if(this.state.activeTool == 'area'){ 
       this.setActiveTool('identify');
@@ -144,6 +168,14 @@ class Legend extends Component {
                       <FaRulerCombined title='Oppervlakte Meten' style={{cursor:"pointer"}} size={22}
                                  className={this.state.activeTool == 'area'? 'toggle activeTool': 'toggle'} 
                                  onClick={this.measureArea} />
+                      <FaShareSquare title='toepassing delen' className="toggle" size={22}
+                              onClick={async () => {
+                                      await navigator.clipboard.writeText(document.location.href);
+                                      message.success(<>
+                                        De <a target='_blank' href={document.location.href} >Url</a> van de toepassing werd naar het klembord gestuurd<br/>
+                                       </>, 2);
+                                    }
+                              }/>  
                   </div>
     let toolNode = toolbar;
 

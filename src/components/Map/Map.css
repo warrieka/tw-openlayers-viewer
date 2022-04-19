@@ -1,7 +1,14 @@
 .ol-zoom {
+  top: 25px;
   left: auto;
-  right: 4px;
+  right: 7px;
 }
+
+.ol-compass {
+  right: auto;
+  left: 4px;
+}
+
 
 .popupContent {
   overflow-y: scroll;

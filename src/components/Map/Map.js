@@ -64,8 +64,11 @@ class Map extends Component {
             <div style={{display: this.state.printing ?'block':'none'}}>
                 <h1>Trage Wegen</h1>
                 <span id="printNode"/>
+                <br/>
                 {vectorsources.map(o => {
-                    return <div key={o.id} >{VectorLegendSVG(o.styleCache , 500)} </div>
+                    return <div key={o.id}> {/* <h2>{o.name}</h2> */}
+                               {VectorLegendSVG(o.styleCache , 500)} 
+                           </div>
                 })}
             </div>
 

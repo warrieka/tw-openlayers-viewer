@@ -64,6 +64,16 @@ let ngi1989= new XYZ({
     projection: webMercator,  crossOrigin: 'anonymous',
     attributions: ["NGI: <a href='https://www.ngi.be/website/gebruiksvoorwaarden-cartoweb-be'>gebruiksvoorwaarden</a>"]
 });
+
+  
+let ngi2000= new XYZ({
+  //info: https://www.ngi.be/tiles/arcgis/rest/services/cartoweb__topo__default__3857__latest/MapServer
+      url: "https://www.ngi.be/tiles/arcgis/rest/services/cartoweb__topo__default__3857__latest_bw/MapServer/tile/{z}/{y}/{x}",
+      minZoom: 7 , maxZoom: 17, 
+      projection: webMercator,  crossOrigin: 'anonymous',
+      attributions: ["NGI: <a href='https://www.ngi.be/website/gebruiksvoorwaarden-cartoweb-be'>gebruiksvoorwaarden</a>"]
+  });
+
 let nginow = new XYZ({
   //info: https://cartoweb.wmts.ngi.be/1.0.0/WMTSCapabilities.xml
     url: "https://cartoweb.wmts.ngi.be/1.0.0/topo/default/3857/{z}/{y}/{x}.png",
@@ -148,7 +158,8 @@ const histolayers = [
   {id:"ngi1939", source: ngi1939, name: "NGI Basiskaart, 1939"},
   {id:"ngi1969", source: ngi1969, name: "NGI Basiskaart, 1969"},
   {id:"ngi1981", source: ngi1981, name: "NGI Basiskaart, 1981"},
-  {id:"ngi1989", source: ngi1989, name: "NGI Basiskaart, 1989"}
+  {id:"ngi1989", source: ngi1989, name: "NGI Basiskaart, 1989"},
+  {id:"ngi2000", source: ngi2000, name: "NGI Basiskaart, 2000+"}
  ];
 
 export {baselayers, histolayers};
