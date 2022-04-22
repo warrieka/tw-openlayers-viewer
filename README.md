@@ -1,7 +1,7 @@
 # Trage wegen in Kaart
 
 ## Goal
-Create reusable openlayers mapping application for use by Tragen Wegen VZW. 
+Create reusable openlayers mapping application for use by Trage Wegen VZW. 
 
 ## Dependenies
 	
