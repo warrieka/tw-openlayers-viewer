@@ -3,6 +3,7 @@
 import XYZ from 'ol/source/XYZ';
 import OSM from 'ol/source/OSM';
 import WMTS from 'ol/source/WMTS';
+import WMS from 'ol/source/TileWMS'
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import TileGrid from 'ol/tilegrid/TileGrid';
 import {get as getProjection} from 'ol/proj';
@@ -65,14 +66,13 @@ let ngi1989= new XYZ({
     attributions: ["NGI: <a href='https://www.ngi.be/website/gebruiksvoorwaarden-cartoweb-be'>gebruiksvoorwaarden</a>"]
 });
 
-  
-let ngi2000= new XYZ({
-  //info: https://www.ngi.be/tiles/arcgis/rest/services/cartoweb__topo__default__3857__latest/MapServer
-      url: "https://www.ngi.be/tiles/arcgis/rest/services/cartoweb__topo__default__3857__latest_bw/MapServer/tile/{z}/{y}/{x}",
-      minZoom: 7 , maxZoom: 17, 
-      projection: webMercator,  crossOrigin: 'anonymous',
-      attributions: ["NGI: <a href='https://www.ngi.be/website/gebruiksvoorwaarden-cartoweb-be'>gebruiksvoorwaarden</a>"]
-  });
+let ngiwms =  new WMS({
+  //info: https://wms.ngi.be/inspire/topomaps/service?version=1.3.0&service=wms&&request=GetCapabilities
+  url: 'https://wms.ngi.be/inspire/topomaps/service',
+  params: {'LAYERS': 'top25map'},
+  serverType: 'geoserver',
+  attributions: ["NGI: <a href='https://www.ngi.be/website/gebruiksvoorwaarden-cartoweb-be'>gebruiksvoorwaarden</a>"]
+});
 
 let nginow = new XYZ({
   //info: https://cartoweb.wmts.ngi.be/1.0.0/WMTSCapabilities.xml
@@ -99,12 +99,11 @@ let abw = new WMTS({
 });
 
 // BASISKAARTEN
-let tw_Mapbox = new XYZ({
+let tw_Mapbox = new XYZ({  //NOT USED
   //info: https://api.mapbox.com/styles/v1/tragewegenantwerpen/ckgtudjm12i7819pfgynlwr07/wmts?access_token=pk.eyJ1IjoidHJhZ2V3ZWdlbmFudHdlcnBlbiIsImEiOiJjanNidDBhMzgwMmNjNGFwZmZnemFydXZnIn0.wbWyb0tpUuCfIvzF2KuPKQ
     url: "https://api.mapbox.com/styles/v1/tragewegenantwerpen/ckgtudjm12i7819pfgynlwr07/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidHJhZ2V3ZWdlbmFudHdlcnBlbiIsImEiOiJjanNidDBhMzgwMmNjNGFwZmZnemFydXZnIn0.wbWyb0tpUuCfIvzF2KuPKQ",
     minZoom: 0 , maxZoom: 22, projection: webMercator, attributions: ["trage wegen vzw"], 
 })
-
 let osm = new OSM();
 
 let lufo =  new WMTS({
@@ -160,7 +159,7 @@ const histolayers = [
   {id:"ngi1969", source: ngi1969, name: "NGI Basiskaart, 1969"},
   {id:"ngi1981", source: ngi1981, name: "NGI Basiskaart, 1981"},
   {id:"ngi1989", source: ngi1989, name: "NGI Basiskaart, 1989"},
-  {id:"ngi2000", source: ngi2000, name: "NGI Basiskaart, 2000+"}
+  {id:"ngi2000", source: ngiwms, name: "NGI Basiskaart, 2000+"}
  ];
 
 export {baselayers, histolayers};
