@@ -148,7 +148,8 @@ const baselayers = [
   {id:"grb", source: grb, name: "Basiskaart Vlaanderen"},
   {id:"lufo", source: lufo, name: "Meest recente luchtfoto"},
   {id:"osm", source: osm,  name: "Openstreetmap" },
-  {id:'tw_Mapbox', source: tw_Mapbox, name: "Basiskaart Trage wegen"} ];
+//  {id:'tw_Mapbox', source: tw_Mapbox, name: "Basiskaart Trage wegen"} 
+];
 
 // LIJST Historische kaarten
 const histolayers = [

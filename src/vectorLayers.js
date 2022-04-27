@@ -12,7 +12,7 @@ import greenRoad from './images/greenRoad_lim.svg'
 const tragewegen_wfs = new VectorSource({
     format: new GML3(), // GML because ESRI does noet support GeoJSON
     url: function (extent) {
-      let typeName = 'dataservices_TrageWegen:F_TrageWegen';
+      let typeName = 'dataservices_TrageWegen:Trage_wegen';
       let outputFormat = "GML3";
       let uri = "https://geoservices.vlaamsbrabant.be/TrageWegen/MapServer/WFSServer?" + 
       `service=wfs&version=2.0.0&request=GetFeature&typeName=${typeName}&outputFormat=${outputFormat}&srsname=EPSG:3857&`+
@@ -47,6 +47,9 @@ function tragewegen_stl(feature, resolution) {
   }
   if (TW_JUR_STATUUT != 2 && TW_TOEGANKELIJK == 2) {
     return tragewegen_cache.find(e => (e.id == "blueDash")).style;
+  }
+  else {
+    return tragewegen_cache.find(e => (e.id == "grayLine")).style;
   }
 }
 
@@ -112,6 +115,15 @@ const tragewegen_cache = [
       width: 2,
       lineDash: [2,2],
       lineDashOffset: 2
+    })
+  })
+}, {
+  id: 'grayLine',
+  name: "Andere lagen",
+  style : new Style({
+    stroke: new Stroke({
+      color:  '#808080',
+      width: 2
     })
   })
 }]
@@ -360,8 +372,8 @@ const tw_wijz_ANT_cache = [ {
 const vectorsources = [ 
   {id:"trw", source: tragewegen_wfs, name: "Trage wegen", visible: true, 
         style: tragewegen_stl,   styleCache: tragewegen_cache,   minZ: 12 } ,
-  {id:"prov", source: prov_wfs, name: "Provinciegrenzen",  visible: false, 
-        style: prov_stl, styleCache: prov_cache, minZ: 5 } ,
+  // {id:"prov", source: prov_wfs, name: "Provinciegrenzen",  visible: false, 
+  //       style: prov_stl, styleCache: prov_cache, minZ: 5 } ,
   {id:"tw_wijz_VLBr", source: tw_wijz_VLBr_wfs, name: "Wijz. Vlaams-Brabant",  visible: false, 
         style: tw_wijz_VLBr_stl, styleCache: tw_wijz_VLBr_cache, minZ: 12 , template: tw_wijz_VLBr_tmpl } ,
   {id:"tw_wijz_OVL",  source: tw_wijz_OVL_wfs,  name: "Wijz. Oost-Vlaanderen", visible: false, 
