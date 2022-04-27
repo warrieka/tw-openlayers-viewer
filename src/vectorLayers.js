@@ -12,7 +12,7 @@ import greenRoad from './images/greenRoad_lim.svg'
 const tragewegen_wfs = new VectorSource({
     format: new GML3(), // GML because ESRI does noet support GeoJSON
     url: function (extent) {
-      let typeName = 'dataservices_TrageWegen:Trage_wegen';
+      let typeName = 'dataservices_TrageWegen:F_TrageWegen';
       let outputFormat = "GML3";
       let uri = "https://geoservices.vlaamsbrabant.be/TrageWegen/MapServer/WFSServer?" + 
       `service=wfs&version=2.0.0&request=GetFeature&typeName=${typeName}&outputFormat=${outputFormat}&srsname=EPSG:3857&`+
@@ -48,9 +48,9 @@ function tragewegen_stl(feature, resolution) {
   if (TW_JUR_STATUUT != 2 && TW_TOEGANKELIJK == 2) {
     return tragewegen_cache.find(e => (e.id == "blueDash")).style;
   }
-  else {
-    return tragewegen_cache.find(e => (e.id == "grayLine")).style;
-  }
+  // else {
+  //   return tragewegen_cache.find(e => (e.id == "grayLine")).style;
+  // }
 }
 
 //styling cache voor trage wegen
@@ -119,7 +119,7 @@ const tragewegen_cache = [
   })
 }, {
   id: 'grayLine',
-  name: "Andere lagen",
+  name: "Alle andere trage wegen",
   style : new Style({
     stroke: new Stroke({
       color:  '#808080',
