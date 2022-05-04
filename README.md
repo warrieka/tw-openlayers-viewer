@@ -25,16 +25,26 @@ For the location search we will the geopunt location service from the Flemish go
 Git and nodejs need te be installed. 
 
 ```
-git clone https://github.com/warrieka/tragewegen
-cd tragewegen
+git clone https://github.com/warrieka/tw-openlayers-viewer
+cd /tw-openlayers-viewer
 npm install
 ```
 
-To start the devellopement server: 
+To start the development server: 
 
 ```
 npm run start
 ```
+## Modify
+
+To change the layers configuration:
+
+In the folder src: 
+- For the vectorlayers: [vectorLayers.js](src/vectorLayers.js) , see [VectorLayer](https://openlayers.org/en/latest/apidoc/module-ol_layer_Vector-VectorLayer.html) and [Example](https://openlayers.org/en/latest/examples/vector-layer.html)
+- For the basemaps: [baseLayers.js](src/baseLayers.js) , see [XYZ](https://openlayers.org/en/latest/apidoc/module-ol_source_XYZ-XYZ.html , [WMTS](https://openlayers.org/en/latest/apidoc/module-ol_source_WMTS-WMTS.html) and [XYZ](https://openlayers.org/en/latest/apidoc/module-ol_source_XYZ-XYZ.html , [WMS](https://openlayers.org/en/latest/apidoc/module-ol_source_TileWMS-TileWMS.html
+See Openlayers documentation about how to modify these parameters : <https://openlayers.org/>
+
+# Deploy
 
 To make a production build and deploy: 
 
@@ -45,3 +55,6 @@ npm run build
 git commit --all -m "some commit message"
 git push 
 ```
+
+You can put all the contents of the [docs](docs)-folder on any webserver an it should work.
+There are no serverside dependencies for production. 
