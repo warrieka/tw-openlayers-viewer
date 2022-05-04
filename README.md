@@ -42,6 +42,7 @@ To change the layers configuration:
 In the folder src: 
 - For the vectorlayers: [vectorLayers.js](src/vectorLayers.js) , see [VectorLayer](https://openlayers.org/en/latest/apidoc/module-ol_layer_Vector-VectorLayer.html) and [Example](https://openlayers.org/en/latest/examples/vector-layer.html)
 - For the basemaps: [baseLayers.js](src/baseLayers.js) , see [XYZ](https://openlayers.org/en/latest/apidoc/module-ol_source_XYZ-XYZ.html) , [WMTS](https://openlayers.org/en/latest/apidoc/module-ol_source_WMTS-WMTS.html) and [XYZ](https://openlayers.org/en/latest/apidoc/module-ol_source_XYZ-XYZ.html) , [WMS](https://openlayers.org/en/latest/apidoc/module-ol_source_TileWMS-TileWMS.html)
+
 See Openlayers documentation about how to modify these parameters : <https://openlayers.org/>
 
 ## Deploy
