@@ -27,8 +27,15 @@ class popup{
           else {
             feature.getKeys().forEach(k => {
               let v = feature.get(k);
-              if (typeof v == 'object') return;
-              attrs += `<b>${k}</b>: ${v}<br>`
+              if (typeof v == 'object' || typeof v == 'undefined') return;
+              let url = validUrl(v);
+              if (url){
+                attrs += `<b>${k}</b>: <a href="${url.href}" target="_blank" >${
+                                  url.pathname.substring(url.pathname.lastIndexOf('/') + 1)}</a>  <br>`
+              } 
+              else {
+                attrs += `<b>${k}</b>: ${v}<br>`
+              }
             })
           }
           callback(title, attrs, geom);
@@ -37,6 +44,16 @@ class popup{
       }
     };
   }
+}
+
+function validUrl(string) {
+  let url;
+  try { url = new URL(string);}
+  catch { return false; }
+  if(url.protocol === "http:" || url.protocol === "https:"){
+    return url;
+  }
+  return false;
 }
 
 export default popup;

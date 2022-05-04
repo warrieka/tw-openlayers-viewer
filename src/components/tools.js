@@ -40,7 +40,7 @@ const urlParams = () => {
     const trues = ["true", "1", "yes", ''];
     const logo = params.get("logo") ? trues.includes( params.get("logo").toLowerCase() ) : true;
     const lyrs = params.get("lyrs") ? params.get("lyrs").split(',') : [];
-    const base =  params.get("base") ? params.get("base") : 'nginow';
+    const base =  params.get("base") ? params.get("base") : 'osm';
     let x = parseFloat( params.get("x"));
     let y = parseFloat( params.get("y"));
     let z = params.get("z") ? parseInt( params.get("z")) : 13;

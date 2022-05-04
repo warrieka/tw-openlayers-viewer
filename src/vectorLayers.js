@@ -1,10 +1,12 @@
 // Configure the foreground vector layers
-import {bbox, all} from 'ol/loadingstrategy';
+import {bbox} from 'ol/loadingstrategy';
 import VectorSource from 'ol/source/Vector';
 import GML3 from 'ol/format/GML3';
 import GeoJSON from 'ol/format/GeoJSON';
-import {Stroke, Fill, Icon, Text, Style} from 'ol/style';
+import {Stroke, Icon, Fill, Style} from 'ol/style';
 import greenRoad from './images/greenRoad_lim.svg'
+import {TW_BREEDTE, TW_DAT_INVENTARISATIE, TW_JUR_STATUUT,  TW_NIET_TG_REDEN, 
+  TW_NIET_ZB_REDEN, TW_TOEGANKELIJK, TW_VERHARDING, TW_ZICHTBAAR} from './components/tw_attributes';
 
 //#region TRAGE_WEGEN
 //Trage wegen
@@ -24,34 +26,47 @@ const tragewegen_wfs = new VectorSource({
  
 //styling functie voor trage wegen
 function tragewegen_stl(feature, resolution) {
-  let TW_JUR_STATUUT = feature.get('TW_JUR_STATUUT');
-  let TW_TOEGANKELIJK = feature.get("TW_TOEGANKELIJK");
-  let TW_ZICHTBAAR = feature.get("TW_TOEGANKELIJK");
+  let tw_jur_stat = feature.get('TW_JUR_STATUUT');
+  let tw_toeg = feature.get("TW_TOEGANKELIJK");
+  let tw_zb = feature.get("TW_TOEGANKELIJK");
 
-  if ((TW_JUR_STATUUT == 2 && TW_TOEGANKELIJK == 1 && TW_ZICHTBAAR == -8) ||
-    (TW_JUR_STATUUT == 2 && TW_TOEGANKELIJK == 1 && TW_ZICHTBAAR == 1)) {
+  if ((tw_jur_stat == 2 && tw_toeg == 1 && tw_zb == -8) ||
+    (tw_jur_stat == 2 && tw_toeg == 1 && tw_zb == 1)) {
     return tragewegen_cache.find(e => (e.id == "greenline")).style;
   }
-  if (TW_JUR_STATUUT == 2 && TW_TOEGANKELIJK == 1 && TW_ZICHTBAAR == 2) {
+  if (tw_jur_stat == 2 && tw_toeg == 1 && tw_zb == 2) {
     return tragewegen_cache.find(e => (e.id == "greenDot")).style;
   }
-  if (TW_JUR_STATUUT == 2 && TW_TOEGANKELIJK == 2) {
+  if (tw_jur_stat == 2 && tw_toeg == 2) {
     return tragewegen_cache.find(e => (e.id == "greenDash")).style;
   }
-  if ((TW_JUR_STATUUT != 2 && TW_TOEGANKELIJK == 1 && TW_ZICHTBAAR == -8) ||
-    (TW_JUR_STATUUT != 2 && TW_TOEGANKELIJK == 1 && TW_ZICHTBAAR == 1)) {
+  if ((tw_jur_stat != 2 && tw_toeg == 1 && tw_zb == -8) ||
+    (tw_jur_stat != 2 && tw_toeg == 1 && tw_zb == 1)) {
     return tragewegen_cache.find(e => (e.id == "blueline")).style;
   }
-  if (TW_JUR_STATUUT != 2 && TW_TOEGANKELIJK == 1 && TW_ZICHTBAAR == 2) {
+  if (tw_jur_stat != 2 && tw_toeg == 1 && tw_zb == 2) {
     return tragewegen_cache.find(e => (e.id == "blueDot")).style;
   }
-  if (TW_JUR_STATUUT != 2 && TW_TOEGANKELIJK == 2) {
+  if (tw_jur_stat != 2 && tw_toeg == 2) {
     return tragewegen_cache.find(e => (e.id == "blueDash")).style;
   }
-  // else {
-  //   return tragewegen_cache.find(e => (e.id == "grayLine")).style;
-  // }
 }
+
+//popup template
+const tragewege_tmpl = feat => `
+
+<ul style="font-size: 15px;">
+<li><b>Naam</b>:  ${feat.TW_NAAM? feat.TW_NAAM:'Geen naam'} </li>
+<li><b>Juridisch statuut</b>: ${TW_JUR_STATUUT(feat)}</li>
+<li><b>Datum inventarisatie</b>: ${TW_DAT_INVENTARISATIE(feat)}</li>
+<li><b>Toegankelijkheid</b>: ${TW_TOEGANKELIJK(feat)}</li>
+<li><b>Reden niet toegankelijk</b>: ${TW_NIET_TG_REDEN(feat)}</li>
+<li><b>Zichtbaarheid</b>: ${TW_ZICHTBAAR(feat)}</li>
+<li><b>Reden niet zichtbaar</b>: ${TW_NIET_ZB_REDEN(feat)}</li>
+<li><b>Verharding</b>: ${TW_VERHARDING(feat)}</li>
+<li><b>Breedte</b>: ${TW_BREEDTE(feat)}</li>
+</ul>`
+//Deze lijkt er niet in te zitten: <li><b>atlas buurtwegen</b>: ${feat.TW_ABW ? feat.TW_ABW :'<i>null</i>'}</li>  
 
 //styling cache voor trage wegen
 const tragewegen_cache = [
@@ -117,57 +132,11 @@ const tragewegen_cache = [
       lineDashOffset: 2
     })
   })
-}, {
-  id: 'grayLine',
-  name: "Alle andere trage wegen",
-  style : new Style({
-    stroke: new Stroke({
-      color:  '#808080',
-      width: 2
-    })
-  })
-}]
-//#endregion
-
-//#region PROVINCIES
-///info: https://geoservices.informatievlaanderen.be/overdrachtdiensten/VRBG/wfs?REQUEST=GetCapabilities&SERVICE=WFS
-const prov_wfs = new VectorSource({
-  format: new GeoJSON(), // GML because ESRI does noet support GeoJSON
-  url: function () {
-    let typeName = 'VRBG:Refprv';
-    let outputFormat = "json";
-    let uri = "https://geoservices.informatievlaanderen.be/overdrachtdiensten/VRBG/wfs?" + 
-    `service=wfs&version=2.0.0&request=GetFeature&typeName=${typeName}&outputFormat=${outputFormat}&srsname=EPSG:3857&count=50`;
-    return uri;
-  },
-  strategy: all,
-});
-///styling 
-let prov_stl = (feature, res) => {
-  let stl = prov_cache[0].style
-  stl.getText().setText(feature.get('NAAM'));
-  stl.getText().setScale(res < 300 ? 1.5 : 1);
-  return stl;
 }
+]
 
-const prov_cache = [ {
-  id: 'okerPolygon',
-  name: "Provinciegrenzen", 
-  style : new Style({
-    text: new Text({
-      font:'normal 10px sans-serif',
-      fill: new Fill({
-        color: 'rgba(100,100,0,1)',
-      }),
-    }),
-    fill: new Fill({
-      color: 'rgba(244,217,165,0.3)'
-    }),
-    stroke: new Stroke({
-      color: 'rgba(240,240,0,1)', width: 2
-    })
-  })
-}]
+
+
 //#endregion
 
 //#region OOSTVLAANDEREN
@@ -368,16 +337,46 @@ const tw_wijz_ANT_cache = [ {
 }]
 //#endregion
 
+//#region Perimeters_ruilverkaveling
+const Perimeters_ruilverkaveling_wfs = new VectorSource({
+  format: new GeoJSON({
+              defaultDataProjection: 'EPSG:4326',
+              featureProjection: 'EPSG:3857'
+          }), // GeoJSON because QGIS-server
+  url: function (extent) {
+    let typeName = 'Perimeters_ruilverkaveling';
+    let outputFormat = "geojson";
+    let uri = "https://wms.qgiscloud.com/tragewegen/trage_wegen_in_je_buurt?" + 
+    `service=WFS&version=1.1.0&request=GetFeature&typeName=${typeName}&outputFormat=${outputFormat}&srsName=EPSG:4326&`+
+    `bbox=${extent.join(',')},EPSG:3857`;
+    return uri;
+  },
+  strategy: bbox,
+});
+const Perimeters_ruilverkaveling_stl = new Style({
+  stroke: new Stroke({
+    color: '#2cfc03', 
+    width: 2
+  }), 
+  fill: new Fill({
+    color: 'rgba(93, 241, 43, 0.61)'
+  })
+})
+const Perimeters_ruilverkaveling_cache = [ {
+  id: 'olivePolygon',
+  name: "Perimeters ruilverkaveling", 
+  style : Perimeters_ruilverkaveling_stl
+}]
+//#endregion
+
 // LIJST 
 const vectorsources = [ 
   {id:"trw", source: tragewegen_wfs, name: "Trage wegen", visible: true, 
-        style: tragewegen_stl,   styleCache: tragewegen_cache,   minZ: 12 } ,
-  // {id:"prov", source: prov_wfs, name: "Provinciegrenzen",  visible: false, 
-  //       style: prov_stl, styleCache: prov_cache, minZ: 5 } ,
+        style: tragewegen_stl,   styleCache: tragewegen_cache, minZ: 12, template: tragewege_tmpl } ,
   {id:"tw_wijz_VLBr", source: tw_wijz_VLBr_wfs, name: "Wijz. Vlaams-Brabant",  visible: false, 
-        style: tw_wijz_VLBr_stl, styleCache: tw_wijz_VLBr_cache, minZ: 12 , template: tw_wijz_VLBr_tmpl } ,
+        style: tw_wijz_VLBr_stl, styleCache: tw_wijz_VLBr_cache, minZ: 12  } ,
   {id:"tw_wijz_OVL",  source: tw_wijz_OVL_wfs,  name: "Wijz. Oost-Vlaanderen", visible: false, 
-        style: tw_wijz_OVL_stl,  styleCache: tw_wijz_OVL_cache, minZ: 12 , template: tw_wijz_OVL_tmpl } ,
+        style: tw_wijz_OVL_stl,  styleCache: tw_wijz_OVL_cache, minZ: 12  } ,
   {id:"tw_wijz_WVL",  source: tw_wijz_WVL_wfs , name: "Wijz. West-Vlaanderen", visible: false, 
         style: tw_wijz_WVL_stl,  styleCache: tw_wijz_WVL_cache, minZ: 12  } ,
   {id:"tw_wijz_ANT",  source: tw_wijz_ANT_wfs,  name: "Wijz. Antwerpen", visible: false, 
@@ -385,7 +384,9 @@ const vectorsources = [
   {id:"tw_wijz_LIM_ln",  source: tw_wijz_LIM_wfs_lijn,  name: "Wijz. Limburg (lijn)", visible: false, 
         style: tw_wijz_LIM_stl_lijn,  styleCache: tw_wijz_LIM_cache_2, minZ: 12  } ,
   {id:"tw_wijz_LIM_pt",  source: tw_wijz_LIM_wfs_punt,  name: "Wijz. Limburg (punt)", visible: false, 
-        style: tw_wijz_LIM_stl_pt,  styleCache: tw_wijz_LIM_cache_1, minZ: 12  } 
+        style: tw_wijz_LIM_stl_pt,  styleCache: tw_wijz_LIM_cache_1, minZ: 12  } ,
+  {id:"p_ruilverkaveling",  source: Perimeters_ruilverkaveling_wfs,  name: "Ruilverkaveling", visible: false, 
+        style: Perimeters_ruilverkaveling_stl,  styleCache: Perimeters_ruilverkaveling_cache, minZ: 12  } ,    
   ];
 
 export {vectorsources};

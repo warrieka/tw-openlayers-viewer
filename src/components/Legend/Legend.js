@@ -6,7 +6,7 @@ const { SubMenu } = Menu;
 
 //import icons and css
 import { FiLayers } from "react-icons/fi";
-import { FaMap, FaSearch, FaList, FaTools, FaShareSquare, 
+import { FaMap, FaSearch, FaList, FaTools, FaShareSquare, FaCrosshairs,
                   FaRulerCombined, FaRuler} from "react-icons/fa";
 import {FiPrinter, FiCalendar} from "react-icons/fi";
 import 'antd/dist/antd.css';
@@ -14,7 +14,7 @@ import "./Legend.css";
 import logo from '../../images/logo.svg';
 
 // maps 
-import {background, drawLayer, viewer} from '../Map/initMap';
+import {background, drawLayer, viewer, geolocation} from '../Map/initMap';
 import {addVectorLayer, urlParams, VectorLegendSVG, lineLength, polygonArea} from '../tools'
 import {fromLonLat, toLonLat} from 'ol/proj';
 import vectorsources from '../../vectorLayers';
@@ -175,7 +175,16 @@ class Legend extends Component {
                                         De <a target='_blank' href={document.location.href} >Link</a> naar de kaart werd naar het klembord gestuurd<br/>
                                        </>, 2);
                                     }
-                              }/>  
+                              }/> 
+                      <FaCrosshairs title='Zoom naar huidige geolocatie' className="toggle" size={22} 
+                                     onClick={() => {geolocation.setTracking( true )
+                                          let xy = geolocation.getPosition(); 
+                                          viewer.animate({zoom: viewer.getZoom() +2, center:xy });
+                                          geolocation.once('change:position', () => {
+                                                let xy = geolocation.getPosition(); 
+                                                viewer.animate({zoom: viewer.getZoom() +2, center:xy });                                             })
+                                       }}
+                      /> 
                   </div>
     let toolNode = toolbar;
 

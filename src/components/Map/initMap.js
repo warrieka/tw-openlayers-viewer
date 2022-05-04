@@ -1,6 +1,8 @@
 import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import View from 'ol/View';
+import Geolocation from 'ol/Geolocation';
+import Overlay from 'ol/Overlay';
 import {baselayers, histolayers} from '../../baseLayers';
 import {ScaleLine} from 'ol/control';
 import {Vector as VectorSource} from 'ol/source';
@@ -48,6 +50,21 @@ const viewer = new View({
       })
   });
 
+// create an Overlay using the div with id location.
+let marker = new Overlay({
+  stopEvent: false
+});
+// create a Geolocation object setup to track the position of the device
+let geolocation = new Geolocation({
+        tracking: false, 
+        projection: viewer.getProjection()
+      });
+geolocation.on('change:position',  () => {
+        const coordinates = geolocation.getPosition(); 
+        marker.setPosition(coordinates);
+ });
+
+
 const initMap = () => {
     let map = new Map({
         interactions: defaultInteractions().extend([new DragRotateAndZoom()]),
@@ -55,18 +72,8 @@ const initMap = () => {
         view: viewer
     });
     map.addControl(new ScaleLine());
+    map.addOverlay(marker);
     return map;
 }
 
-export {initMap, background, viewer, drawLayer};
-
-////////////////////////////////
-// ALT Methode for mapbox layers: 
-////////////////////////////////
-// import MapboxVector from 'ol/layer/MapboxVector';
-// import TileLayer from 'ol/layer/Tile';
-// const tw_Mapbox = new MapboxVector({
-//    styleUrl: 'mapbox://styles/tragewegenantwerpen/ckgtudjm12i7819pfgynlwr07',
-//     accessToken:
-//     'pk.eyJ1IjoidHJhZ2V3ZWdlbmFudHdlcnBlbiIsImEiOiJjanNidDBhMzgwMmNjNGFwZmZnemFydXZnIn0.wbWyb0tpUuCfIvzF2KuPKQ',
-//   });
+export {initMap, background, viewer, drawLayer, marker, geolocation};

@@ -35,6 +35,9 @@ To start the development server:
 ```
 npm run start
 ```
+The server will run on url: <>
+
+
 ## Modify
 
 To change the layers configuration:

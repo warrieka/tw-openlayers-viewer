@@ -1,5 +1,6 @@
 import React, { Component  } from "react";
-import {initMap, drawLayer} from './initMap';
+import {FaCrosshairs} from "react-icons/fa";
+import {initMap, drawLayer, marker} from './initMap';
 import vectorsources from '../../vectorLayers';
 import {VectorLegendSVG} from '../tools'
 import Legend from '../Legend/Legend';
@@ -23,6 +24,7 @@ class Map extends Component {
     componentDidMount(){
        let target = document.getElementById("olmap");
        this.state.map.setTarget(target);
+       marker.setElement( document.getElementById('crosshair') )
        this.popup = new popup(this.state.map, this.infoFound);
      }
 
@@ -60,6 +62,8 @@ class Map extends Component {
                    >
                   <div id='popContent'></div>  
             </Modal>
+
+            <span id='crosshair' ><FaCrosshairs size={18} color="red"/></span>
 
             <div style={{display: this.state.printing ?'block':'none'}}>
                 <h1>Trage Wegen</h1>
