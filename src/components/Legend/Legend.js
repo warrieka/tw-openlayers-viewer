@@ -148,6 +148,27 @@ class Legend extends Component {
     }
   }  
 
+  geolocation = () => {
+    if( geolocation.getTracking()){
+          let xy = geolocation.getPosition(); 
+          viewer.animate({zoom: viewer.getZoom() +2, center:xy });
+          } 
+    else {
+          geolocation.setTracking( true );
+          geolocation.once('change:position', () => {
+            let xy = geolocation.getPosition(); 
+            viewer.animate({zoom: viewer.getZoom() +2, center:xy });      
+          });
+        }
+  } 
+
+  share = async () => {
+    await navigator.clipboard.writeText(document.location.href);
+    message.success(<>
+      De <a target='_blank' href={document.location.href} >Link</a> naar de kaart werd naar het klembord gestuurd<br/>
+     </>, 2);
+  }
+
   render() {
     
     let adresBar = <AutoComplete  style={{padding:10, width: 240 }}  
@@ -169,22 +190,9 @@ class Legend extends Component {
                                  className={this.state.activeTool == 'area'? 'toggle activeTool': 'toggle'} 
                                  onClick={this.measureArea} />
                       <FaShareSquare title='Kaart delen' className="toggle" size={22}
-                              onClick={async () => {
-                                      await navigator.clipboard.writeText(document.location.href);
-                                      message.success(<>
-                                        De <a target='_blank' href={document.location.href} >Link</a> naar de kaart werd naar het klembord gestuurd<br/>
-                                       </>, 2);
-                                    }
-                              }/> 
+                                 onClick={this.share}/> 
                       <FaCrosshairs title='Zoom naar huidige geolocatie' className="toggle" size={22} 
-                                     onClick={() => {geolocation.setTracking( true )
-                                          let xy = geolocation.getPosition(); 
-                                          viewer.animate({zoom: viewer.getZoom() +2, center:xy });
-                                          geolocation.once('change:position', () => {
-                                                let xy = geolocation.getPosition(); 
-                                                viewer.animate({zoom: viewer.getZoom() +2, center:xy });                                             })
-                                       }}
-                      /> 
+                                 onClick={this.geolocation}/> 
                   </div>
     let toolNode = toolbar;
 
