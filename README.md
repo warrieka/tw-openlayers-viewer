@@ -44,7 +44,7 @@ In the folder src:
 - For the basemaps: [baseLayers.js](src/baseLayers.js) , see [XYZ](https://openlayers.org/en/latest/apidoc/module-ol_source_XYZ-XYZ.html , [WMTS](https://openlayers.org/en/latest/apidoc/module-ol_source_WMTS-WMTS.html) and [XYZ](https://openlayers.org/en/latest/apidoc/module-ol_source_XYZ-XYZ.html , [WMS](https://openlayers.org/en/latest/apidoc/module-ol_source_TileWMS-TileWMS.html
 See Openlayers documentation about how to modify these parameters : <https://openlayers.org/>
 
-# Deploy
+## Deploy
 
 To make a production build and deploy: 
 
