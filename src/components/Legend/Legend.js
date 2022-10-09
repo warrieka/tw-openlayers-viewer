@@ -182,7 +182,7 @@ class Legend extends Component {
     
     let legendeCaption = i => <> Legende  
                       <span style={{right:5, top: 5, position: 'absolute'}}>
-                           <Slider style={{display: 'inline-block', width: 180}}  min={-100} max={0} defaultValue={0}
+                           <Slider style={{display: 'inline-block', width: 180}}  min={-100} max={0} defaultValue={-100}
                                    tipFormatter={val => `transparantie ${100 +val}%`}  
                                    onAfterChange={o => this.setVectorTrans(i, o/-100)}/> 
                       </span>
