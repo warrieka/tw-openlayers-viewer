@@ -12,7 +12,7 @@ import {
   DragRotateAndZoom,
   defaults as defaultInteractions,
 } from 'ol/interaction';
-import {urlParams} from '../tools'
+import {urlParams} from '../tools';
 
 const params = urlParams();
 let baseMap = baselayers.find(e=> (e.id === params.basemap)) ;
@@ -30,15 +30,14 @@ const histo = new TileLayer({
     source: histoMap ? histoMap.source : null
    });
 
-
 //initial View 
 const viewer = new View({
         center: [414243,6627955],
         zoom: 13, maxZoom: 21, minZoom: 7,
         extent: [177852,6078083,968831,6920858] 
-    });
+   });
 
- const drawLayer = new VectorLayer({
+const drawLayer = new VectorLayer({
     title: 'draw',
     source: new VectorSource(),
     style: new Style({
@@ -55,12 +54,12 @@ const viewer = new View({
             }), 
         })
       })
-  });
+   });
 
-// create an Overlay using the div with id location.
-let marker = new Overlay({
-  stopEvent: false
-});
+// create Overlays using the div with id location (set in Map)
+let marker = new Overlay({stopEvent: false, positioning: 'bottom-center'});
+let crossHair = new Overlay({ stopEvent: false, positioning: 'center-center'});
+
 // create a Geolocation object setup to track the position of the device
 let geolocation = new Geolocation({
         tracking: false, 
@@ -68,7 +67,7 @@ let geolocation = new Geolocation({
       });
 geolocation.on('change:position',  () => {
         const coordinates = geolocation.getPosition(); 
-        marker.setPosition(coordinates);
+        crossHair.setPosition(coordinates);
  });
 
 
@@ -79,8 +78,12 @@ const initMap = () => {
         view: viewer
     });
     map.addControl(new ScaleLine());
-    map.addOverlay(marker);
+    map.addOverlay(crossHair);
+    if(params.marker){
+      map.addOverlay(marker);
+      marker.setPosition(params.marker)
+    }
     return map;
 }
 
-export {initMap, background, histo, viewer, drawLayer, marker, geolocation};
+export {initMap, background, histo, viewer, drawLayer, marker, crossHair, geolocation};

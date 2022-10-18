@@ -35,13 +35,22 @@ class Legend extends Component {
                      histomap: this.intialParams.histomap,
                      basemaps: baselayers, 
                      histomaps: histolayers
-                    };   
+                    }; 
+      this.params = (x,y,z,lyrs) => {
+        let qry = {'logo': this.intialParams.logo, 
+                   'lyrs': lyrs, 'base': this.state.basemap, 'histo': this.state.histomap, 'histTrans': histo.getOpacity(),
+                    'x': x, 'y': y, 'z':z 
+                   }
+        return '?' + new URLSearchParams(qry).toString();
+      }
+      if(this.intialParams.marker){
+        let marker=  toLonLat( this.intialParams );
+        this.params = (x,y,z,lyrs) => this.params(x,y,z,lyrs) + `&marker_lng=${marker[0]}&marker_lat=${marker[1]}`;
+      }                              
     }
   componentDidMount() {
      if(this.intialParams.center ) { viewer.setCenter( this.intialParams.center ); }
      if(this.intialParams.zoom ) { viewer.setZoom( this.intialParams.zoom ); }
-
-     let logo= this.intialParams.logo;
 
      viewer.on('change', () => {
       let z = viewer.getZoom().toFixed(2);
@@ -49,7 +58,7 @@ class Legend extends Component {
       let xy = toLonLat( viewer.getCenter() );
       let x = xy[0].toFixed(5); 
       let y = xy[1].toFixed(5);
-      let qry = `?logo=${logo}&x=${x}&y=${y}&z=${z}&lyrs=${lyrs}&base=${this.state.basemap}&histo=${this.state.histomap}&histTrans=${histo.getOpacity()}`
+      let qry = this.params(x,y,z,lyrs);
       let newurl = location.protocol + "//" + location.host + location.pathname + qry;
       history.pushState({path:newurl},'',newurl);
   } );
@@ -92,7 +101,6 @@ class Legend extends Component {
       vectors[idx].lyr.setOpacity( o );
       this.setState({vectors:vectors});
     }
-
 
   activateBasemap = lyrId => {
       this.setState({basemap:lyrId});
@@ -183,7 +191,7 @@ class Legend extends Component {
     let legendeCaption = i => <> Legende  
                       <span style={{right:5, top: 5, position: 'absolute'}}>
                            <Slider style={{display: 'inline-block', width: 180}}  min={-100} max={0} defaultValue={-100}
-                                   tipFormatter={val => `transparantie ${100 +val}%`}  
+                                   tooltip={{'formatter': val => `transparantie ${100 +val}%`}}
                                    onAfterChange={o => this.setVectorTrans(i, o/-100)}/> 
                       </span>
                     </>
@@ -230,15 +238,16 @@ class Legend extends Component {
                  onCollapse={c => this.setState({menuCollapse:c})}
                  style={{height:"100vh", overflowY:'auto', overflowX: 'hidden'}}
                  width={240} className="site-layout-background">
-              <div style={{paddingTop: 10, display: this.intialParams.logo ? "block" : 'none'  }} >
-                  <img src={logo} id="Logo" style={{width: this.state.menuCollapse ? 40 : 100, alignSelf: 'center' }} />
-              </div> 
+                <div style={{paddingTop: 10, display: this.intialParams.logo ? "block" : 'none'  }} >
+                    <img src={logo} id="Logo" style={{width: this.state.menuCollapse ? 40 : 100, alignSelf: 'center' }} />
+                </div> 
 
               {adresNode}
               {toolNode}
 
               <Menu mode="inline"  inlineIndent={10} theme="dark"
                   defaultOpenKeys={this.state.menuCollapse ? []:['layers']} >
+                    
                 <SubMenu key="layers" title="Lagen" icon={<FiLayers />} > 
                   {this.state.vectors.map( (o,i) => {
                         return (
@@ -260,9 +269,11 @@ class Legend extends Component {
 
                   <SubMenu key="histomap" title="Historische kaarten" icon={<FiCalendar />} >
                     <Menu.Item  key={'transparencySlider'} disabled style={{cursor:"pointer"}} title='transparantie' >
-                    <Slider tipFormatter={val => `transparantie ${100 +val}%`} 
+                      <Slider 
+                        tooltip={{'formatter': val => `transparantie ${100 +val}%`}}
                         defaultValue={ histo.getOpacity()*-100 } min={-100} max={0} step={1} 
-                        onAfterChange={o => ( histo.setOpacity( o / -100 ) || viewer.changed() )} ></Slider>
+                        onAfterChange={o => ( histo.setOpacity( o / -100 ) || viewer.changed() )} >
+                        </Slider>
                      </Menu.Item> 
                   {this.state.histomaps.map( o => {
                         return ( 
