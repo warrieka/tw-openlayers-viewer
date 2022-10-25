@@ -1,6 +1,7 @@
 import React, { Component  } from "react";
-import {FaCrosshairs, FaMapMarker} from "react-icons/fa";
+import {FaCrosshairs} from "react-icons/fa";
 import {initMap, drawLayer, marker, crossHair} from './initMap';
+import TwMarker from '../../images/twMarker.svg';
 import vectorsources from '../../vectorLayers';
 import {VectorLegendSVG} from '../tools'
 import Legend from '../Legend/Legend';
@@ -26,7 +27,6 @@ class Map extends Component {
        this.state.map.setTarget(target);
        crossHair.setElement( document.getElementById('crosshair') );
        marker.setElement( document.getElementById('marker') );
-
        this.popup = new popup(this.state.map, this.infoFound);
      }
 
@@ -66,7 +66,7 @@ class Map extends Component {
             </Modal>
 
             <span id='crosshair' ><FaCrosshairs size={18} color="red"/></span>
-            <span id='marker' ><FaMapMarker size={18} color="red"/></span>
+            <span id='marker' ><img src={TwMarker} width="18"  /></span>
 
             <div style={{display: this.state.printing ?'block':'none'}}>
                 <h1>Trage Wegen</h1>
