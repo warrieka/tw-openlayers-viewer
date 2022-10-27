@@ -42,7 +42,7 @@ const polygonArea = geom =>  {
 const lineLength = geom =>  {
     geom.transform('EPSG:3857', "EPSG:31370"); // webmercator is inacurate
     let area = geom.getLength().toFixed(2);
-    geom.transform( "EPSG:31370", 'EPSG:3857',);s
+    geom.transform( "EPSG:31370", 'EPSG:3857',);
     return area;
 }
 
